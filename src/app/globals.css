@@ -24,3 +24,125 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Oculta barra de scroll manteniendo scroll funcional */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes navbar-search-expand {
+  from {
+    max-width: 0;
+    opacity: 0;
+  }
+  to {
+    max-width: 16rem;
+    opacity: 1;
+  }
+}
+
+.navbar-search-expand {
+  overflow: hidden;
+  animation: navbar-search-expand 220ms ease-out;
+}
+
+@keyframes modal-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-slide-down {
+  animation: modal-slide-down 260ms ease-out forwards;
+}
+
+@keyframes modal-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+  75% { transform: translateY(-1px); }
+}
+
+.modal-bounce {
+  animation: modal-bounce 500ms ease-out;
+}
+
+.font-anton {
+  font-family: var(--font-anton), Impact, sans-serif;
+}
+
+.header-title-color {
+  color: lab(39 -1.08 -32.18);
+}
+
+.font-category-card {
+  font-family: var(--font-lato), Lato, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.font-mini-footer {
+  font-family: var(--font-lato), Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif;
+}
+
+@keyframes categoryCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.category-card-fade-in {
+  animation: categoryCardFadeIn 0.4s ease-out both;
+  opacity: 0;
+}
+
+.img-fade-in {
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.img-fade-in.img-fade-in-loaded {
+  opacity: 1;
+}
+
+.product-price {
+  font-weight: 900;
+  -webkit-text-stroke: 0.35px currentColor;
+}
+
+.product-description {
+  color: #21243d;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 1em 1rem 0.5em;
+  margin: 0;
+  white-space: break-spaces;
+  font-family: var(--font-lato), Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif;
+}
+
+.product-name {
+  font-family: var(--font-lato), Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif;
+  color: #000000;
+  font-weight: 700;
+  line-height: 1.2em;
+  font-size: 16px;
+  max-height: 2.6em;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+}
