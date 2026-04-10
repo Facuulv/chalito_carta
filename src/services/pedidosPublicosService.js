@@ -50,3 +50,82 @@ export async function crearPedidoPublico(payload) {
 
   return data;
 }
+
+/**
+ * Inicia checkout de Mercado Pago y devuelve URL de pago.
+ * POST {BASE_URL}/api/carta-publica/checkout/mercadopago
+ */
+export async function crearCheckoutMercadoPago(payload) {
+  const baseURL =
+    process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
+  if (!baseURL) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL no configurada");
+  }
+
+  const normalizedBase = baseURL.replace(/\/$/, "");
+  const usesApiPrefix = /\/api$/i.test(normalizedBase);
+  const endpointPath = usesApiPrefix
+    ? "/carta-publica/checkout/mercadopago"
+    : "/api/carta-publica/checkout/mercadopago";
+  const url = `${normalizedBase}${endpointPath}`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const msg =
+      data?.message ??
+      data?.error ??
+      data?.mensaje ??
+      "No pudimos iniciar el pago con Mercado Pago. Intentá nuevamente.";
+    throw new Error(msg);
+  }
+
+  return data;
+}
+
+/**
+ * Consulta estado real de pago/pedido para una orden.
+ * GET {BASE_URL}/api/carta-publica/pedidos/:pedidoId/estado-pago
+ */
+export async function obtenerEstadoPagoPedido(pedidoId) {
+  if (!pedidoId) {
+    throw new Error("Falta el identificador del pedido.");
+  }
+
+  const baseURL =
+    process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
+  if (!baseURL) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL no configurada");
+  }
+
+  const normalizedBase = baseURL.replace(/\/$/, "");
+  const usesApiPrefix = /\/api$/i.test(normalizedBase);
+  const endpointPath = usesApiPrefix
+    ? `/carta-publica/pedidos/${encodeURIComponent(pedidoId)}/estado-pago`
+    : `/api/carta-publica/pedidos/${encodeURIComponent(pedidoId)}/estado-pago`;
+  const url = `${normalizedBase}${endpointPath}`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const msg =
+      data?.message ??
+      data?.error ??
+      data?.mensaje ??
+      "No pudimos verificar el estado del pago.";
+    throw new Error(msg);
+  }
+
+  return data;
+}
