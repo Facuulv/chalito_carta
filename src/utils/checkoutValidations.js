@@ -9,6 +9,7 @@ import {
 
 const NAME_REGEX = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CALLE_REGEX = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s.\-]+$/;
 
 /** Normaliza nombre: trim + colapsar espacios múltiples */
 export function normalizeName(name) {
@@ -138,20 +139,32 @@ export function validateCheckoutForm(formState, cartTotal) {
     nombre = "",
     telefono = "",
     email = "",
+    tipoEntrega,
+    deliveryType,
     tipoDemora,
     cuando,
     horarioProgramado = "",
     horaProgramada = "",
+    calle = "",
+    altura = "",
+    numeroAltura = "",
+    edificioCasa = "",
+    pisoDepto = "",
+    obsEntrega = "",
+    obsEnvio = "",
     metodoPago,
     paymentMethod,
     montoEfectivo = "",
     efectivoConCuanto = "",
   } = formState;
 
+  const delivery = tipoEntrega ?? deliveryType ?? "envio";
   const demora = tipoDemora ?? cuando ?? "cuanto_antes";
   const pago = (metodoPago ?? paymentMethod ?? "").toLowerCase();
   const efectivo = (montoEfectivo ?? efectivoConCuanto ?? "").trim();
+  const obs = (obsEntrega ?? obsEnvio ?? "").trim();
 
+  const isDelivery = delivery === "DELIVERY" || delivery === "envio";
   const isHoraProgramada = demora === "HORA_PROGRAMADA" || demora === "programado";
   const isEfectivo = pago === "efectivo";
   const timeVal = (horarioProgramado ?? horaProgramada ?? "").trim();
@@ -181,7 +194,24 @@ export function validateCheckoutForm(formState, cartTotal) {
     errors.horarioProgramado = timeResult.message;
   }
 
-  // E) Payment
+  // E) DELIVERY - dirección
+  if (isDelivery) {
+    const calleVal = (calle ?? "").trim();
+    const alturaVal = normalizeAltura(altura || numeroAltura);
+    if (!calleVal || calleVal.length < 2) {
+      errors.calle = "Ingresá una calle válida.";
+    } else if (!CALLE_REGEX.test(calleVal)) {
+      errors.calle = "Ingresá una calle válida.";
+    }
+    if (!alturaVal) {
+      errors.numeroAltura = "Ingresá número/altura.";
+    }
+    if (obs.length > 200) {
+      errors.obsEntrega = "Máximo 200 caracteres.";
+    }
+  }
+
+  // F) Payment
   if (!pago) {
     errors.metodoPago = "Elegí un método de pago.";
   }
@@ -199,16 +229,34 @@ export function validateCheckoutForm(formState, cartTotal) {
 
   const firstErrorKey = Object.keys(errors)[0];
   let firstError = firstErrorKey ? errors[firstErrorKey] : null;
-  // horarioProgramado usa el mensaje específico de validateScheduledTime (vacio o < 10 min)
+  if (firstErrorKey === "calle" || firstErrorKey === "numeroAltura") {
+    firstError = "Completá la dirección de entrega.";
+  }
+  // horarioProgramado usa el mensaje específico de validateScheduledTime (vacío o < 10 min)
+
+  const calleTrim = (calle ?? "").trim();
+  const alturaNorm = normalizeAltura(altura || numeroAltura);
+  const edificioTrim = (edificioCasa ?? "").trim();
+  const pisoTrim = (pisoDepto ?? "").trim();
 
   const normalized = {
     nombre: normalizeName(nombre),
     telefono: normalizePhone(telefono),
     email: (email ?? "").trim() || undefined,
-    // Se elimina envio: checkout fijo en retiro.
-    deliveryType: "RETIRO",
+    deliveryType: isDelivery ? "DELIVERY" : "RETIRO",
     cuando: isHoraProgramada ? "HORA_PROGRAMADA" : "CUANTO_ANTES",
     horarioProgramado: isHoraProgramada ? timeVal : undefined,
+    address: isDelivery
+      ? [
+          `Calle: ${calleTrim}`,
+          `Altura: ${alturaNorm}`,
+          edificioTrim ? `Edificio/Casa: ${edificioTrim}` : null,
+          pisoTrim ? `Piso/Depto: ${pisoTrim}` : null,
+        ]
+          .filter(Boolean)
+          .join(" | ")
+      : undefined,
+    notes: isDelivery ? obs.slice(0, 200) || undefined : undefined,
     paymentMethod: (metodoPago ?? paymentMethod ?? "").toUpperCase(),
     efectivoConCuanto: isEfectivo ? parseMoneyNumber(efectivo) : undefined,
   };

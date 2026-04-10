@@ -7,7 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import {
   useCarritoStore,
   selectCartItems,
-  getItemSubtotal,
+  selectCartTotal,
 } from "@/store/useCarritoStore";
 import { useStoreStatus } from "@/hooks/useStoreStatus";
 import CheckoutCategoryGroup from "@/components/checkout/CheckoutCategoryGroup";
@@ -18,10 +18,7 @@ import CheckoutRemoveItemModal from "@/components/checkout/CheckoutRemoveItemMod
 export default function CheckoutPage() {
   const router = useRouter();
   const items = useCarritoStore(selectCartItems);
-  const total = useMemo(
-    () => items.reduce((acc, item) => acc + getItemSubtotal(item), 0),
-    [items]
-  );
+  const total = useCarritoStore(selectCartTotal);
   const removeItem = useCarritoStore((state) => state.removeItem);
   const updateQuantity = useCarritoStore((state) => state.updateQuantity);
   const { isOpen } = useStoreStatus();

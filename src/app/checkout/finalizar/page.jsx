@@ -8,16 +8,22 @@ import { toast } from "sonner";
 import {
   useCarritoStore,
   selectCartItems,
+  selectCartTotal,
   getItemSubtotal,
 } from "@/store/useCarritoStore";
 import { useStoreStatus } from "@/hooks/useStoreStatus";
 import { getItemName, getItemQuantity } from "@/utils/cart/cartItem";
 import CustomerSection from "@/components/checkout/finalizar/CustomerSection";
+import DeliverySection from "@/components/checkout/finalizar/DeliverySection";
 import ScheduleSection from "@/components/checkout/finalizar/ScheduleSection";
 import PaymentSection from "@/components/checkout/finalizar/PaymentSection";
 import OrderSummaryFooter from "@/components/checkout/finalizar/OrderSummaryFooter";
 import { useCheckoutSubmit } from "@/hooks/checkout/useCheckoutSubmit";
 
+const TIPOS_ENTREGA = {
+  envio: "envio",
+  retiro: "retiro",
+};
 const TIPOS_DEMORA = {
   cuantoAntes: "cuanto_antes",
   programado: "programado",
@@ -26,16 +32,29 @@ const TIPOS_DEMORA = {
 export default function CheckoutFinalizarPage() {
   const router = useRouter();
   const items = useCarritoStore(selectCartItems);
-  const total = useMemo(
-    () => items.reduce((acc, item) => acc + getItemSubtotal(item), 0),
-    [items]
-  );
+  const total = useCarritoStore(selectCartTotal);
   const clearCart = useCarritoStore((s) => s.clearCart);
   const { isOpen } = useStoreStatus();
 
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail] = useState("");
+  const [tipoEntrega, setTipoEntrega] = useState(TIPOS_ENTREGA.envio);
+  const [calle, setCalle] = useState(() => {
+    if (typeof window === "undefined") return "";
+    try {
+      const legacy =
+        sessionStorage.getItem("checkout_direccion") ||
+        sessionStorage.getItem("checkout_address");
+      return legacy && typeof legacy === "string" ? legacy.trim() : "";
+    } catch (_) {
+      return "";
+    }
+  });
+  const [numeroAltura, setNumeroAltura] = useState("");
+  const [edificioCasa, setEdificioCasa] = useState("");
+  const [pisoDepto, setPisoDepto] = useState("");
+  const [obsEntrega, setObsEntrega] = useState("");
   const [metodoPago, setMetodoPago] = useState("efectivo");
   const [montoEfectivo, setMontoEfectivo] = useState("");
   const [tipoDemora, setTipoDemora] = useState(TIPOS_DEMORA.cuantoAntes);
@@ -80,6 +99,15 @@ export default function CheckoutFinalizarPage() {
     }
   }, [items.length, pedidoCreado]);
 
+  // Migración: limpiar keys legacy una vez inicializado el estado
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem("checkout_direccion");
+      sessionStorage.removeItem("checkout_address");
+    } catch (_) {}
+  }, []);
+
+  const isEnvio = tipoEntrega === TIPOS_ENTREGA.envio;
   const hasInvalidItems = items.some(
     (item) => item.articuloId == null || item.articuloId === undefined
   );
@@ -113,8 +141,14 @@ export default function CheckoutFinalizarPage() {
       nombre,
       telefono,
       email,
+      tipoEntrega,
       tipoDemora,
       horarioProgramado: horaProgramada,
+      calle,
+      numeroAltura,
+      edificioCasa,
+      pisoDepto,
+      obsEntrega,
       metodoPago,
       montoEfectivo,
     },
@@ -196,6 +230,33 @@ export default function CheckoutFinalizarPage() {
             setTelefono={setTelefono}
             email={email}
             setEmail={setEmail}
+            fieldErrors={fieldErrors}
+            clearFieldError={clearFieldError}
+          />
+
+          <DeliverySection
+            tipoEntrega={tipoEntrega}
+            TIPOS_ENTREGA={TIPOS_ENTREGA}
+            setTipoEntrega={setTipoEntrega}
+            clearDeliveryErrorsForRetiro={() =>
+              setFieldErrors((prev) => {
+                const next = { ...prev };
+                delete next.calle;
+                delete next.numeroAltura;
+                delete next.obsEntrega;
+                return next;
+              })
+            }
+            calle={calle}
+            setCalle={setCalle}
+            numeroAltura={numeroAltura}
+            setNumeroAltura={setNumeroAltura}
+            edificioCasa={edificioCasa}
+            setEdificioCasa={setEdificioCasa}
+            pisoDepto={pisoDepto}
+            setPisoDepto={setPisoDepto}
+            obsEntrega={obsEntrega}
+            setObsEntrega={setObsEntrega}
             fieldErrors={fieldErrors}
             clearFieldError={clearFieldError}
           />

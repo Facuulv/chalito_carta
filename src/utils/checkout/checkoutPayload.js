@@ -19,56 +19,12 @@ function buildScheduledTimeIso(horarioProgramado) {
   return scheduled.toISOString();
 }
 
-function roundMoney(value) {
-  return Math.round(Number(value) * 100) / 100;
-}
-
-function getExtraPrice(extra) {
-  if (!extra || typeof extra !== "object") return 0;
-  return Number(extra.precioExtra ?? extra.precio ?? 0);
-}
-
-function getItemSubtotalFromCart(item) {
-  const explicitSubtotal = Number(item?.subtotal);
-  if (Number.isFinite(explicitSubtotal)) return roundMoney(explicitSubtotal);
-
-  const quantity = Number(getItemQuantity(item));
-  const explicitUnitPrice = Number(item?.precioUnitario);
-  if (Number.isFinite(explicitUnitPrice) && Number.isFinite(quantity)) {
-    return roundMoney(explicitUnitPrice * quantity);
-  }
-
-  const base = Number(item?.precioBase ?? 0);
-  const extras = (item?.extrasSeleccionados ?? item?.extras ?? []).reduce(
-    (acc, extra) => acc + getExtraPrice(extra),
-    0
-  );
-  return roundMoney((base + extras) * quantity);
-}
-
-function getSafeQuantity(item) {
-  const quantity = Number(getItemQuantity(item));
-  return Number.isFinite(quantity) && quantity > 0 ? quantity : 1;
-}
-
-function resolveFinalTotal(items, displayedTotal) {
-  const itemsTotal = roundMoney(
-    items.reduce((acc, item) => acc + getItemSubtotalFromCart(item), 0)
-  );
-  const visibleTotal = Number(displayedTotal);
-  if (Number.isFinite(visibleTotal)) {
-    return roundMoney(visibleTotal);
-  }
-  return itemsTotal;
-}
-
-export function buildCheckoutPayload({ normalized, items, displayedTotal }) {
+export function buildCheckoutPayload({ normalized, items }) {
   const when = normalized.cuando; // "CUANTO_ANTES" | "HORA_PROGRAMADA"
   const scheduledTime =
     when === "HORA_PROGRAMADA"
       ? buildScheduledTimeIso(normalized.horarioProgramado)
       : undefined;
-  const total = resolveFinalTotal(items, displayedTotal);
 
   const payload = {
     customer: {
@@ -83,12 +39,9 @@ export function buildCheckoutPayload({ normalized, items, displayedTotal }) {
     prioridad: "NORMAL",
     when,
     ...(when === "HORA_PROGRAMADA" && scheduledTime && { scheduledTime }),
-    total,
     items: items.map((item) => ({
       productId: item.articuloId,
-      quantity: getSafeQuantity(item),
-      unitPrice: roundMoney(getItemSubtotalFromCart(item) / getSafeQuantity(item)),
-      subtotal: getItemSubtotalFromCart(item),
+      quantity: getItemQuantity(item),
       selectedExtras: (item.extrasSeleccionados ?? item.extras ?? []).map((e) =>
         typeof e === "object" && e != null && "id" in e ? e.id : Number(e)
       ),
@@ -104,9 +57,8 @@ export function buildCheckoutPayload({ normalized, items, displayedTotal }) {
   return { payload, when, scheduledTime };
 }
 
-export function buildMercadoPagoCheckoutPayload({ normalized, items, displayedTotal }) {
+export function buildMercadoPagoCheckoutPayload({ normalized, items }) {
   const isScheduledDelivery = normalized.cuando === "HORA_PROGRAMADA";
-  const total = resolveFinalTotal(items, displayedTotal);
 
   return {
     cliente: {
@@ -121,12 +73,10 @@ export function buildMercadoPagoCheckoutPayload({ normalized, items, displayedTo
       horario_entrega: isScheduledDelivery ? normalized.horarioProgramado : null,
       prioridad: "ALTA",
       medio_pago: "MERCADOPAGO",
-      total,
     },
     items: items.map((item) => ({
       articulo_id: item.articuloId,
-      cantidad: getSafeQuantity(item),
-      subtotal: getItemSubtotalFromCart(item),
+      cantidad: getItemQuantity(item),
       observaciones: (item.observaciones ?? "").trim() || null,
       extras: (item.extrasSeleccionados ?? item.extras ?? [])
         .map((extra) =>
@@ -145,11 +95,20 @@ export function resolveCreatedOrderMeta(data) {
 }
 
 export function resolveOrderTotals(data, fallbackSubtotal) {
+  const deliveryCost =
+    parseBackendNumber(data?.deliveryCost) ??
+    parseBackendNumber(data?.costoEnvio) ??
+    parseBackendNumber(data?.shippingCost) ??
+    parseBackendNumber(data?.pedido?.deliveryCost) ??
+    parseBackendNumber(data?.pedido?.costoEnvio) ??
+    parseBackendNumber(data?.pedido?.shippingCost) ??
+    0;
+
   const backendTotal =
     parseBackendNumber(data?.total) ??
     parseBackendNumber(data?.totalPedido) ??
     parseBackendNumber(data?.pedido?.total);
 
-  const totalFinal = backendTotal ?? fallbackSubtotal;
-  return { deliveryCost: 0, totalFinal };
+  const totalFinal = backendTotal ?? fallbackSubtotal + deliveryCost;
+  return { deliveryCost, totalFinal };
 }

@@ -59,7 +59,6 @@ export function useCheckoutSubmit({
         const payloadMercadoPago = buildMercadoPagoCheckoutPayload({
           normalized,
           items,
-          displayedTotal: total,
         });
         const mpResponse = await crearCheckoutMercadoPago(payloadMercadoPago);
         const urlPago = mpResponse?.data?.url_pago ?? mpResponse?.url_pago;
@@ -74,11 +73,7 @@ export function useCheckoutSubmit({
         return;
       }
 
-      const { payload } = buildCheckoutPayload({
-        normalized,
-        items,
-        displayedTotal: total,
-      });
+      const { payload } = buildCheckoutPayload({ normalized, items });
       const data = await crearPedidoPublico(payload);
       const { pedidoId, estado } = resolveCreatedOrderMeta(data);
       setPedidoCreado({ id: pedidoId, estado });
