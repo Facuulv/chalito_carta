@@ -292,6 +292,7 @@ export default function CheckoutFinalizarPage() {
         handleSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         isOpen={isOpen}
+        isEnvio={isEnvio}
       />
     </div>
   );

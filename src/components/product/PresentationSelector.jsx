@@ -63,6 +63,7 @@ export default function PresentationSelector({
   precioSimple,
   precioDoble,
   precioTriple,
+  precioCuadruple,
   togglePresentacionCheck,
   setPresentacionCantidad,
 }) {
@@ -150,6 +151,20 @@ export default function PresentationSelector({
             decrementDisabled={presentacionCantidades.triple <= 0}
             price={precioTriple}
             ariaLabel="Seleccionar Triple"
+          />
+        )}
+
+        {presentacion.cuadruple && (
+          <PresentationRow
+            checked={presentacionCantidades.cuadruple > 0}
+            onToggle={() => togglePresentacionCheck("cuadruple")}
+            label="Cuádruple"
+            quantity={presentacionCantidades.cuadruple}
+            onDecrement={() => setPresentacionCantidad("cuadruple", -1)}
+            onIncrement={() => setPresentacionCantidad("cuadruple", 1)}
+            decrementDisabled={presentacionCantidades.cuadruple <= 0}
+            price={precioCuadruple}
+            ariaLabel="Seleccionar Cuádruple"
           />
         )}
       </div>

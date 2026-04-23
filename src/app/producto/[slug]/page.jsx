@@ -78,6 +78,7 @@ export default function ProductoDetallePage() {
     simple: 0,
     doble: 0,
     triple: 0,
+    cuadruple: 0,
   });
   const [extrasSeleccionados, setExtrasSeleccionados] = useState([]);
   const [extrasOpen, setExtrasOpen] = useState(false);
@@ -87,7 +88,7 @@ export default function ProductoDetallePage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPresentacionCantidades({ simple: 0, doble: 0, triple: 0 });
+      setPresentacionCantidades({ simple: 0, doble: 0, triple: 0, cuadruple: 0 });
       setExtrasSeleccionados([]);
       setPapasSeleccionadas({});
       setObservaciones("");
@@ -105,22 +106,31 @@ export default function ProductoDetallePage() {
   }, [productId, isSimpleFooter]);
 
   const { presentacion, extras } = useMemo(() => {
-    const nombresPresentacion = ["hacela doble", "hacela triple"];
+    const normalizeExtraName = (value) =>
+      (value ?? "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    const nombresPresentacion = ["hacela doble", "hacela triple", "hacela cuadruple"];
     const pres = [];
     const ext = [];
     for (const a of todosAdicionales) {
-      const nombreNorm = (a.nombre ?? "").trim().toLowerCase();
+      const nombreNorm = normalizeExtraName(a.nombre);
       if (nombresPresentacion.includes(nombreNorm)) pres.push(a);
       else ext.push(a);
     }
     const doble = pres.find(
-      (a) => (a.nombre ?? "").trim().toLowerCase() === "hacela doble"
+      (a) => normalizeExtraName(a.nombre) === "hacela doble"
     );
     const triple = pres.find(
-      (a) => (a.nombre ?? "").trim().toLowerCase() === "hacela triple"
+      (a) => normalizeExtraName(a.nombre) === "hacela triple"
+    );
+    const cuadruple = pres.find(
+      (a) => normalizeExtraName(a.nombre) === "hacela cuadruple"
     );
     return {
-      presentacion: { doble, triple },
+      presentacion: { doble, triple, cuadruple },
       extras: ext,
     };
   }, [todosAdicionales]);
@@ -160,7 +170,7 @@ export default function ProductoDetallePage() {
     });
   };
 
-  const { precioSimple, precioDoble, precioTriple, precioUnitario } =
+  const { precioSimple, precioDoble, precioTriple, precioCuadruple, precioUnitario } =
     useProductPricing({
       producto,
       presentacion,
@@ -284,6 +294,7 @@ export default function ProductoDetallePage() {
                 precioSimple={precioSimple}
                 precioDoble={precioDoble}
                 precioTriple={precioTriple}
+                precioCuadruple={precioCuadruple}
                 togglePresentacionCheck={togglePresentacionCheck}
                 setPresentacionCantidad={setPresentacionCantidad}
               />

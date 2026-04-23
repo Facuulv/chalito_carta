@@ -65,7 +65,8 @@ export default function ProductAddToCartFooter({
           disabled={
             presentacionCantidades.simple +
               presentacionCantidades.doble +
-              presentacionCantidades.triple ===
+              presentacionCantidades.triple +
+              presentacionCantidades.cuadruple ===
               0 || !isOpen
           }
           className={`flex w-[90%] items-center rounded-md px-4 py-3 transition ${
@@ -73,7 +74,8 @@ export default function ProductAddToCartFooter({
           } ${
             presentacionCantidades.simple +
               presentacionCantidades.doble +
-              presentacionCantidades.triple ===
+              presentacionCantidades.triple +
+              presentacionCantidades.cuadruple ===
               0 || !isOpen
               ? "cursor-not-allowed bg-[#ffd082] text-[#21243d] opacity-60"
               : "bg-[#ffd082] text-[#21243d] hover:bg-[#f0c870] active:opacity-90"

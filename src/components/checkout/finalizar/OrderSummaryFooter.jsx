@@ -12,6 +12,7 @@ export default function OrderSummaryFooter({
   handleSubmit,
   isSubmitting,
   isOpen,
+  isEnvio,
 }) {
   return (
     <footer className="fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2">
@@ -73,6 +74,11 @@ export default function OrderSummaryFooter({
           {hasInvalidItems && (
             <p className="mb-1 text-center text-sm font-medium text-amber-700">
               Hay un producto inválido. Vaciá el carrito y agregalo nuevamente.
+            </p>
+          )}
+          {isEnvio && (
+            <p className="mb-2 rounded-md border border-amber-300 bg-amber-50 px-2 py-1.5 text-center text-xs font-semibold text-amber-900">
+              El envio se cobra aparte y no esta incluido en este total.
             </p>
           )}
           <div className="mb-0 flex items-center justify-between px-3">

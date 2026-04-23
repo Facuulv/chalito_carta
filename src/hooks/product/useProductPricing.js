@@ -18,17 +18,27 @@ export function useProductPricing({
     ? precioSimple +
       Number(presentacion.triple.precio ?? presentacion.triple.precioExtra ?? 0)
     : 0;
+  const precioCuadruple = presentacion.cuadruple
+    ? precioSimple +
+      Number(presentacion.cuadruple.precio ?? presentacion.cuadruple.precioExtra ?? 0)
+    : 0;
 
   const totalPresentacion = useMemo(() => {
     if (!producto) return 0;
-    const { simple, doble, triple } = presentacionCantidades;
-    return simple * precioSimple + doble * precioDoble + triple * precioTriple;
+    const { simple, doble, triple, cuadruple } = presentacionCantidades;
+    return (
+      simple * precioSimple +
+      doble * precioDoble +
+      triple * precioTriple +
+      cuadruple * precioCuadruple
+    );
   }, [
     producto,
     presentacionCantidades,
     precioSimple,
     precioDoble,
     precioTriple,
+    precioCuadruple,
   ]);
 
   const totalPapas = useMemo(
@@ -50,7 +60,8 @@ export function useProductPricing({
     const totalItems =
       (presentacionCantidades.simple ?? 0) +
       (presentacionCantidades.doble ?? 0) +
-      (presentacionCantidades.triple ?? 0);
+      (presentacionCantidades.triple ?? 0) +
+      (presentacionCantidades.cuadruple ?? 0);
 
     return (
       totalPresentacion + (totalItems > 0 ? totalItems * extrasTotal : 0) + totalPapas
@@ -67,6 +78,7 @@ export function useProductPricing({
     precioSimple,
     precioDoble,
     precioTriple,
+    precioCuadruple,
     totalPresentacion,
     totalPapas,
     precioUnitario,

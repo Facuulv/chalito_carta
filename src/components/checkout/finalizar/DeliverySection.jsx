@@ -54,6 +54,13 @@ export default function DeliverySection({
 
       {tipoEntrega === TIPOS_ENTREGA.envio && (
         <div className="space-y-3">
+          <div className="rounded-lg border-2 border-amber-300 bg-amber-50 px-3 py-2">
+            <p className="text-sm font-semibold text-amber-900">
+              Importante: el costo de envio se cobra aparte y no esta incluido en el total del
+              pedido.
+            </p>
+          </div>
+
           <label className="block">
             <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
               Calle

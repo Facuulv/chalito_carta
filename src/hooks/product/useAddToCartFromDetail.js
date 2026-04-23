@@ -26,12 +26,17 @@ export function useAddToCartFromDetail({
     const totalItems =
       (presentacionCantidades.simple ?? 0) +
       (presentacionCantidades.doble ?? 0) +
-      (presentacionCantidades.triple ?? 0);
+      (presentacionCantidades.triple ?? 0) +
+      (presentacionCantidades.cuadruple ?? 0);
     if (totalItems === 0) return;
 
     navigatingRef.current = true;
 
-    const presIds = [presentacion.doble?.id, presentacion.triple?.id].filter(Boolean);
+    const presIds = [
+      presentacion.doble?.id,
+      presentacion.triple?.id,
+      presentacion.cuadruple?.id,
+    ].filter(Boolean);
     const otrosExtras = todosAdicionales
       .filter((e) => extrasSeleccionados.includes(e.id) && !presIds.includes(e.id))
       .map((e) => ({
@@ -99,6 +104,31 @@ export function useAddToCartFromDetail({
         ],
         observaciones,
         cantidad: presentacionCantidades.triple,
+        categoria_nombre:
+          producto.categoria_nombre ??
+          categorias.find((c) => c.id === producto.categoria_id)?.nombre,
+        imagen_url: producto.imagen_url,
+      });
+    }
+
+    if (presentacionCantidades.cuadruple > 0 && presentacion.cuadruple) {
+      addItem({
+        articuloId: producto.id,
+        slug: `${producto.id}-cuadruple`,
+        nombre: producto.nombre,
+        precioBase: Number(producto.precio),
+        extrasSeleccionados: [
+          ...otrosExtras,
+          {
+            id: presentacion.cuadruple.id,
+            nombre: presentacion.cuadruple.nombre ?? "",
+            precioExtra: Number(
+              presentacion.cuadruple.precio ?? presentacion.cuadruple.precioExtra ?? 0
+            ),
+          },
+        ],
+        observaciones,
+        cantidad: presentacionCantidades.cuadruple,
         categoria_nombre:
           producto.categoria_nombre ??
           categorias.find((c) => c.id === producto.categoria_id)?.nombre,
