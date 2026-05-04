@@ -19,6 +19,7 @@ import ScheduleSection from "@/components/checkout/finalizar/ScheduleSection";
 import PaymentSection from "@/components/checkout/finalizar/PaymentSection";
 import OrderSummaryFooter from "@/components/checkout/finalizar/OrderSummaryFooter";
 import { useCheckoutSubmit } from "@/hooks/checkout/useCheckoutSubmit";
+import { guardarDatos, usarDatosPrevios } from "@/hooks/checkout/useCheckoutPersistence";
 
 const TIPOS_ENTREGA = {
   envio: "envio",
@@ -63,6 +64,7 @@ export default function CheckoutFinalizarPage() {
   const [pedidoCreado, setPedidoCreado] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [resumenOpen, setResumenOpen] = useState(false);
+  const [datosPrevios, setDatosPrevios] = useState(null);
   const montoEfectivoInputRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const prevMetodoPagoRef = useRef(metodoPago);
@@ -70,6 +72,23 @@ export default function CheckoutFinalizarPage() {
   useEffect(() => {
     scrollContainerRef.current?.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    setDatosPrevios(usarDatosPrevios());
+  }, []);
+
+  useEffect(() => {
+    if (!pedidoCreado) return;
+    guardarDatos({
+      nombre,
+      telefono,
+      email,
+      calle,
+      numeroAltura,
+      edificioCasa,
+      pisoDepto,
+    });
+  }, [pedidoCreado, nombre, telefono, email, calle, numeroAltura, edificioCasa, pisoDepto]);
 
   useEffect(() => {
     if (metodoPago === "efectivo") {
@@ -215,6 +234,37 @@ export default function CheckoutFinalizarPage() {
         className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
       >
         <main className="space-y-6 px-4 py-4 pb-44">
+          {datosPrevios ? (
+            <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
+              <p className="text-sm text-blue-900 mb-2">¿Querés usar los datos de tu último pedido?</p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white"
+                  onClick={() => {
+                    setNombre(datosPrevios.nombre || "");
+                    setTelefono(datosPrevios.telefono || "");
+                    setEmail(datosPrevios.email || "");
+                    setCalle(datosPrevios.calle || "");
+                    setNumeroAltura(datosPrevios.numeroAltura || "");
+                    setEdificioCasa(datosPrevios.edificioCasa || "");
+                    setPisoDepto(datosPrevios.pisoDepto || "");
+                    setDatosPrevios(null);
+                  }}
+                >
+                  Usar
+                </button>
+                <button
+                  type="button"
+                  className="rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-800"
+                  onClick={() => setDatosPrevios(null)}
+                >
+                  Ignorar
+                </button>
+              </div>
+            </div>
+          ) : null}
+
           {!isOpen && (
             <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center">
               <p className="text-sm font-semibold text-amber-900">

@@ -1,4 +1,5 @@
 import { useCarritoStore } from "@/store/useCarritoStore";
+import { limpiarDatos } from "@/hooks/checkout/useCheckoutPersistence";
 
 const LEGACY_CHECKOUT_ADDRESS_KEYS = ["checkout_direccion", "checkout_address"];
 
@@ -8,6 +9,7 @@ const LEGACY_CHECKOUT_ADDRESS_KEYS = ["checkout_direccion", "checkout_address"];
  */
 export function resetClientStateAfterApprovedPayment() {
   useCarritoStore.getState().clearCart();
+  limpiarDatos();
   try {
     for (const key of LEGACY_CHECKOUT_ADDRESS_KEYS) {
       sessionStorage.removeItem(key);
