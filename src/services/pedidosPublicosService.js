@@ -89,6 +89,50 @@ export async function crearCheckoutMercadoPago(payload) {
   return data;
 }
 
+function buildCartaPublicaPath(suffixPath) {
+  const baseURL =
+    process.env.NEXT_PUBLIC_API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || "";
+  if (!baseURL) {
+    throw new Error("NEXT_PUBLIC_API_BASE_URL no configurada");
+  }
+  const normalizedBase = baseURL.replace(/\/$/, "");
+  const usesApiPrefix = /\/api$/i.test(normalizedBase);
+  const endpointPath = usesApiPrefix
+    ? `/carta-publica${suffixPath}`
+    : `/api/carta-publica${suffixPath}`;
+  return `${normalizedBase}${endpointPath}`;
+}
+
+/**
+ * Estado de sesión Mercado Pago (polling hasta que exista pedido o falle).
+ * GET .../carta-publica/checkout/sesion/:sessionId/estado
+ */
+export async function obtenerEstadoSesionMp(sessionId) {
+  const sid = String(sessionId || "").trim();
+  if (!sid) {
+    throw new Error("Falta el identificador de sesión.");
+  }
+  const url = buildCartaPublicaPath(`/checkout/sesion/${encodeURIComponent(sid)}/estado`);
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const msg =
+      data?.message ??
+      data?.error ??
+      data?.mensaje ??
+      "No pudimos verificar el estado del pago.";
+    throw new Error(msg);
+  }
+
+  return data;
+}
+
 /**
  * Consulta estado real de pago/pedido para una orden.
  * GET {BASE_URL}/api/carta-publica/pedidos/:pedidoId/estado-pago
@@ -104,12 +148,9 @@ export async function obtenerEstadoPagoPedido(pedidoId) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL no configurada");
   }
 
-  const normalizedBase = baseURL.replace(/\/$/, "");
-  const usesApiPrefix = /\/api$/i.test(normalizedBase);
-  const endpointPath = usesApiPrefix
-    ? `/carta-publica/pedidos/${encodeURIComponent(pedidoId)}/estado-pago`
-    : `/api/carta-publica/pedidos/${encodeURIComponent(pedidoId)}/estado-pago`;
-  const url = `${normalizedBase}${endpointPath}`;
+  const url = buildCartaPublicaPath(
+    `/pedidos/${encodeURIComponent(pedidoId)}/estado-pago`
+  );
 
   const response = await fetch(url, {
     method: "GET",
