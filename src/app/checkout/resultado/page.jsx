@@ -4,12 +4,17 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, CircleAlert, CircleCheckBig, CircleX, LoaderCircle, RefreshCcw } from "lucide-react";
-import { obtenerEstadoPagoPedido } from "@/services/pedidosPublicosService";
+import {
+  obtenerEstadoPagoPedido,
+  obtenerEstadoSesionMp,
+} from "@/services/pedidosPublicosService";
 import { formatPrice } from "@/utils/format/price";
 import { resetClientStateAfterApprovedPayment } from "@/utils/checkout/resetAfterApprovedPayment";
 
 const POLL_INTERVAL_MS = 3500;
 const MAX_POLL_ATTEMPTS = 5;
+/** Post-MP el pedido se crea vía webhook: más reintentos para flujo por session_id */
+const MAX_POLL_ATTEMPTS_SESSION = 24;
 
 const UI_STATES = {
   loading: "loading",
@@ -29,7 +34,8 @@ function resolveUiState(estadoPago) {
   return UI_STATES.error;
 }
 
-function buildStatusContent(uiState, pollAttempt) {
+function buildStatusContent(uiState, pollAttempt, maxPollAttempts) {
+  const maxPoll = maxPollAttempts ?? MAX_POLL_ATTEMPTS;
   switch (uiState) {
     case UI_STATES.approved:
       return {
@@ -40,7 +46,7 @@ function buildStatusContent(uiState, pollAttempt) {
       return {
         title: "Pago pendiente",
         message:
-          pollAttempt >= MAX_POLL_ATTEMPTS
+          pollAttempt >= maxPoll
             ? "Tu pago sigue pendiente. Te recomendamos revisar nuevamente en unos minutos."
             : "Estamos confirmando tu pago con Mercado Pago. Esta pantalla se actualizará automáticamente.",
       };
@@ -80,8 +86,18 @@ function getStatusIcon(uiState) {
   return <CircleAlert size={28} className="text-amber-700" />;
 }
 
-function parseEstadoPayload(response) {
+function parseEstadoPayload(response, source = "pedido") {
   const root = response?.data ?? response ?? {};
+  if (source === "session") {
+    return {
+      pedidoId: root?.pedido_id ?? root?.pedidoId ?? null,
+      estadoPago: root?.estado_pago ?? root?.estadoPago ?? null,
+      estadoPedido: root?.estado_pedido ?? root?.estadoPedido ?? null,
+      total: root?.total ?? null,
+      moneda: root?.moneda ?? "ARS",
+      estadoSesion: root?.estado_sesion ?? null,
+    };
+  }
   const pedido = root?.pedido ?? {};
   const pago = root?.pago ?? {};
 
@@ -97,12 +113,16 @@ function parseEstadoPayload(response) {
     estadoPedido: root?.estado_pedido ?? root?.estadoPedido ?? pedido?.estado ?? null,
     total: root?.total ?? pedido?.total ?? null,
     moneda: root?.moneda ?? pedido?.moneda ?? "ARS",
+    estadoSesion: null,
   };
 }
 
 function CheckoutResultadoContent() {
   const searchParams = useSearchParams();
+  const sessionIdFromUrl = (searchParams.get("session_id") ?? "").trim();
   const pedidoIdFromUrl = (searchParams.get("pedido_id") ?? "").trim();
+  const useSessionFlow = Boolean(sessionIdFromUrl);
+  const maxPollAttempts = useSessionFlow ? MAX_POLL_ATTEMPTS_SESSION : MAX_POLL_ATTEMPTS;
   const [uiState, setUiState] = useState(UI_STATES.loading);
   const [data, setData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
@@ -120,10 +140,12 @@ function CheckoutResultadoContent() {
 
   const fetchStatus = useCallback(
     async ({ attempt = 0, withLoading = true } = {}) => {
-      if (!pedidoIdFromUrl) {
+      if (!useSessionFlow && !pedidoIdFromUrl) {
         stopPolling();
         setUiState(UI_STATES.error);
-        setErrorMessage("No encontramos `pedido_id` en la URL de retorno.");
+        setErrorMessage(
+          "No encontramos `session_id` ni `pedido_id` en la URL de retorno."
+        );
         setData(null);
         return;
       }
@@ -134,8 +156,10 @@ function CheckoutResultadoContent() {
       setErrorMessage("");
 
       try {
-        const response = await obtenerEstadoPagoPedido(pedidoIdFromUrl);
-        const parsed = parseEstadoPayload(response);
+        const response = useSessionFlow
+          ? await obtenerEstadoSesionMp(sessionIdFromUrl)
+          : await obtenerEstadoPagoPedido(pedidoIdFromUrl);
+        const parsed = parseEstadoPayload(response, useSessionFlow ? "session" : "pedido");
         const nextUiState = resolveUiState(parsed.estadoPago);
         setData(parsed);
         setUiState(nextUiState);
@@ -146,7 +170,7 @@ function CheckoutResultadoContent() {
           resetClientStateAfterApprovedPayment();
         }
 
-        if (nextUiState === UI_STATES.pending && attempt < MAX_POLL_ATTEMPTS) {
+        if (nextUiState === UI_STATES.pending && attempt < maxPollAttempts) {
           stopPolling();
           pollTimeoutRef.current = window.setTimeout(() => {
             fetchStatusRef.current?.({ attempt: attempt + 1, withLoading: false });
@@ -163,7 +187,7 @@ function CheckoutResultadoContent() {
         );
       }
     },
-    [pedidoIdFromUrl, stopPolling]
+    [useSessionFlow, sessionIdFromUrl, pedidoIdFromUrl, maxPollAttempts, stopPolling]
   );
 
   useEffect(() => {
@@ -172,7 +196,7 @@ function CheckoutResultadoContent() {
 
   useEffect(() => {
     postPagoLimpiezaHechaRef.current = false;
-  }, [pedidoIdFromUrl]);
+  }, [pedidoIdFromUrl, sessionIdFromUrl]);
 
   useEffect(() => {
     let cancelled = false;
@@ -183,13 +207,13 @@ function CheckoutResultadoContent() {
       cancelled = true;
       stopPolling();
     };
-  }, [pedidoIdFromUrl, fetchStatus, stopPolling]);
+  }, [pedidoIdFromUrl, sessionIdFromUrl, useSessionFlow, fetchStatus, stopPolling]);
 
-  const statusContent = buildStatusContent(uiState, pollAttempt);
+  const statusContent = buildStatusContent(uiState, pollAttempt, maxPollAttempts);
   const hasTotal = Number.isFinite(Number(data?.total));
   const showRetry = uiState === UI_STATES.error;
-  const showPollingHint = uiState === UI_STATES.pending && pollAttempt < MAX_POLL_ATTEMPTS;
-  const displayPedidoId = data?.pedidoId ?? pedidoIdFromUrl;
+  const showPollingHint = uiState === UI_STATES.pending && pollAttempt < maxPollAttempts;
+  const displayPedidoId = data?.pedidoId ?? (useSessionFlow ? null : pedidoIdFromUrl);
 
   return (
     <div
@@ -220,10 +244,9 @@ function CheckoutResultadoContent() {
             </div>
 
             <p className="mt-2 text-sm text-slate-700">{statusContent.message}</p>
-
             {showPollingHint && (
               <p className="mt-2 text-xs text-slate-500">
-                Reintento {pollAttempt + 1} de {MAX_POLL_ATTEMPTS + 1}.
+                Reintento {pollAttempt + 1} de {maxPollAttempts + 1}.
               </p>
             )}
 
@@ -231,11 +254,22 @@ function CheckoutResultadoContent() {
               <p className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMessage}</p>
             )}
           </section>
-
           <section className="mt-4 rounded-xl border border-neutral-200 bg-[#f8f8f8] p-4">
-            <div className="flex items-center justify-between text-sm">
+            {useSessionFlow && sessionIdFromUrl ? (
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-semibold text-slate-700">Sesión</span>
+                <span className="max-w-[55%] truncate text-right font-mono text-xs text-slate-600">
+                  {sessionIdFromUrl}
+                </span>
+              </div>
+            ) : null}
+            <div
+              className={`flex items-center justify-between text-sm ${useSessionFlow ? "mt-2" : ""}`}
+            >
               <span className="font-semibold text-slate-700">Pedido</span>
-              <strong className="text-slate-900">#{displayPedidoId || "-"}</strong>
+              <strong className="text-slate-900">
+                {displayPedidoId != null && displayPedidoId !== "" ? `#${displayPedidoId}` : "—"}
+              </strong>
             </div>
             <div className="mt-2 flex items-center justify-between text-sm">
               <span className="font-semibold text-slate-700">Estado del pedido</span>
