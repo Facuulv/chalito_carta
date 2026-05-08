@@ -76,7 +76,7 @@ export default function HomePage() {
 
   if (hasError) {
     return (
-      <div className="flex min-h-screen w-full flex-col items-center justify-center gap-4 bg-neutral-100 px-4">
+      <div className="flex h-full min-h-0 w-full flex-col items-center justify-center gap-4 bg-neutral-100 px-4">
         <p className="text-center text-slate-600">
           {categoriesError || "Error al cargar el catálogo"}
         </p>
@@ -92,26 +92,26 @@ export default function HomePage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-3.25rem)] w-full flex-col overflow-hidden bg-neutral-100">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
       <HeroSlider images={heroImages} />
 
       {!isOpen && (
-        <div className="shrink-0 px-0 pb-2">
+        <div className="shrink-0 px-0 pb-2 md:px-4">
           <StoreClosedBanner message="Ahora estamos cerrados" nextOpeningText={nextOpeningText} />
         </div>
       )}
 
       <div className="flex min-h-0 flex-1 flex-col">
-        <div className="relative z-0 -mt-2 shrink-0 bg-slate-200 px-4 pt-8 pb-16">
+        <div className="relative z-0 -mt-2 shrink-0 bg-slate-200 px-4 pt-8 pb-16 md:px-6 lg:px-8">
           <h2 className="font-anton header-title-color text-center text-2xl font-normal tracking-tight">
             Categorías
           </h2>
         </div>
 
-        <div className="no-scrollbar relative z-10 -mt-12 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain bg-transparent">
-          <div className={`px-4 pt-4 ${hasItems ? "pb-14" : "pb-6"}`}>
+        <div className="app-scroll-y no-scrollbar relative z-10 -mt-12 flex min-h-0 flex-1 flex-col bg-transparent">
+          <div className={`w-full px-4 pt-4 md:px-8 xl:px-10 ${hasItems ? "pb-14" : "pb-6"}`}>
             {categoriesLoading || categorias.length === 0 ? (
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
@@ -120,7 +120,7 @@ export default function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
                 {categorias.map((categoria, index) => (
                   <div
                     key={categoria.id}

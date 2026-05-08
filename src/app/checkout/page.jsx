@@ -40,8 +40,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-3.25rem)] min-h-0 w-full flex-col overflow-hidden bg-white">
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm md:px-6 lg:px-8">
         <Link
           href="/"
           className="flex shrink-0 items-center justify-center header-title-color"
@@ -54,8 +54,8 @@ export default function CheckoutPage() {
         </h1>
       </header>
 
-      <div className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
-        <main className="px-4 py-4 pb-36">
+      <div className="app-scroll-y no-scrollbar flex min-h-0 flex-1 flex-col">
+        <main className="mx-auto w-full max-w-[480px] px-4 py-4 pb-[calc(8rem+env(safe-area-inset-bottom))] md:max-w-5xl md:px-6 lg:px-8">
           <div className="space-y-6">
             {groupedByCategory.map(([categoriaNombre, categoriaItems]) => (
               <CheckoutCategoryGroup

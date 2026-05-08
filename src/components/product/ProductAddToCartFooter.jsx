@@ -12,8 +12,9 @@ export default function ProductAddToCartFooter({
   precioUnitario,
 }) {
   return (
-    <footer className="font-mini-footer fixed bottom-0 left-1/2 z-50 flex w-full max-w-[480px] -translate-x-1/2 items-center justify-center gap-3 bg-[#fff] px-4 py-3 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-      {isSimpleFooter ? (
+    <footer className="font-mini-footer fixed inset-x-0 bottom-0 z-50">
+      <div className="mx-auto flex w-full max-w-[480px] items-center justify-center gap-3 bg-[#fff] px-4 py-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:max-w-5xl">
+        {isSimpleFooter ? (
         <>
           <div className="flex shrink-0 items-center gap-0.5">
             <button
@@ -92,6 +93,7 @@ export default function ProductAddToCartFooter({
           )}
         </button>
       )}
+      </div>
     </footer>
   );
 }

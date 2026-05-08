@@ -62,18 +62,20 @@ export default function CategoriaPage() {
 
   if (!categoria && !categoriesLoading && categorias.length > 0) {
     return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-4">
-        <Link
-          href="/"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-white"
-          aria-label="Volver"
-        >
-          <ArrowLeft size={20} />
-        </Link>
-        <p className="text-center text-slate-600">Categoría no encontrada</p>
-        <Link href="/" className="text-sm font-semibold text-blue-600 underline">
-          Volver a la carta
-        </Link>
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
+        <div className="flex flex-1 min-h-0 flex-col items-center justify-center gap-4 px-4">
+          <Link
+            href="/"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-white"
+            aria-label="Volver"
+          >
+            <ArrowLeft size={20} />
+          </Link>
+          <p className="text-center text-slate-600">Categoría no encontrada</p>
+          <Link href="/" className="text-sm font-semibold text-blue-600 underline">
+            Volver a la carta
+          </Link>
+        </div>
       </div>
     )
   }
@@ -90,8 +92,8 @@ export default function CategoriaPage() {
   const displayNombre = nombreCorregido ? nombreCorregido.toUpperCase() : ""
 
   return (
-    <div className="flex h-[calc(100dvh-3.25rem)] w-full flex-col overflow-hidden bg-neutral-100">
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[56px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-4 shadow-sm">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[56px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-4 shadow-sm md:px-6 lg:px-8">
         <Link
           href="/"
           className="flex shrink-0 items-center justify-center header-title-color"
@@ -104,8 +106,8 @@ export default function CategoriaPage() {
         </h1>
       </header>
 
-      <div className="no-scrollbar relative z-0 -mt-12 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
-        <main className={`px-4 pt-16 ${productos.length > 0 ? "pb-16" : hasItems ? "pb-14" : "pb-12"}`}>
+      <div className="app-scroll-y no-scrollbar relative z-0 -mt-12 flex min-h-0 flex-1 flex-col">
+        <main className={`w-full px-4 pt-16 md:px-8 xl:px-10 ${productos.length > 0 ? "pb-16" : hasItems ? "pb-14" : "pb-12"}`}>
           {loading && productos.length === 0 && (
             <div className="space-y-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -134,7 +136,7 @@ export default function CategoriaPage() {
           )}
 
           {productos.length > 0 && (
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {productos.map((producto) => (
                 <ProductListItemCard key={producto.id} producto={producto} />
               ))}

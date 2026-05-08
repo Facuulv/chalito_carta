@@ -204,35 +204,39 @@ export default function ProductoDetallePage() {
 
   if (error || !producto) {
     return (
-      <div className="min-h-screen w-full bg-[#fff] p-4">
-        <Link
-          href="/"
-          className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
-          aria-label="Volver al inicio"
-        >
-          <ArrowLeft size={20} />
-        </Link>
-        <p className="text-center text-lg font-semibold text-neutral-800">
-          {error || "Producto no encontrado"}
-        </p>
-        <div className="mt-4 flex flex-col items-center gap-2">
-          <Link
-            href="/"
-            className="text-sm font-medium text-blue-600 underline"
-          >
-            Volver a la carta
-          </Link>
-          {error && (
-            <button
-              type="button"
-              onClick={() =>
-                useCatalogStore.getState().fetchProductDetail(productId, { force: true })
-              }
-              className="text-sm font-semibold text-slate-800"
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#fff]">
+        <div className="app-scroll-y flex min-h-0 flex-1 flex-col p-4">
+          <div className="mx-auto w-full max-w-[480px] md:max-w-5xl">
+            <Link
+              href="/"
+              className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
+              aria-label="Volver al inicio"
             >
-              Reintentar
-            </button>
-          )}
+              <ArrowLeft size={20} />
+            </Link>
+            <p className="text-center text-lg font-semibold text-neutral-800">
+              {error || "Producto no encontrado"}
+            </p>
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <Link
+                href="/"
+                className="text-sm font-medium text-blue-600 underline"
+              >
+                Volver a la carta
+              </Link>
+              {error && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    useCatalogStore.getState().fetchProductDetail(productId, { force: true })
+                  }
+                  className="text-sm font-semibold text-slate-800"
+                >
+                  Reintentar
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -241,8 +245,8 @@ export default function ProductoDetallePage() {
   const imagenUrl = buildImageUrl(producto.imagen_url);
 
   return (
-    <div className="flex h-[calc(100dvh-3.25rem)] w-full flex-col overflow-hidden bg-[#fff]">
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[56px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-4 shadow-sm">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-[#fff]">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[56px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-4 shadow-sm md:px-6 lg:px-8">
         <button
           type="button"
           onClick={() => router.back()}
@@ -256,8 +260,8 @@ export default function ProductoDetallePage() {
         </h1>
       </header>
 
-      <div className="no-scrollbar relative z-0 -mt-12 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
-        <div className="px-0 pt-16 pb-20">
+      <div className="app-scroll-y no-scrollbar relative z-0 -mt-12 flex min-h-0 flex-1 flex-col">
+        <div className="mx-auto w-full max-w-[480px] px-0 pt-16 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:max-w-5xl md:px-6">
           <div className="mb-1" />
 
           <section className="relative h-[260px] w-full overflow-hidden bg-[#fff]">

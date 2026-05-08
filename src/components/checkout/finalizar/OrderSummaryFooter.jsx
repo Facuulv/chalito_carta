@@ -15,8 +15,8 @@ export default function OrderSummaryFooter({
   isEnvio,
 }) {
   return (
-    <footer className="fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2">
-      <div className="w-full border-t border-neutral-200/60 bg-white/95 backdrop-blur">
+    <footer className="fixed inset-x-0 bottom-0 z-30">
+      <div className="mx-auto w-full max-w-[480px] border-t border-neutral-200/60 bg-white/95 backdrop-blur md:max-w-5xl">
         <section className="overflow-hidden border-b border-neutral-200/60 bg-[#f8f8f8]">
           <button
             type="button"
@@ -70,7 +70,7 @@ export default function OrderSummaryFooter({
             </div>
           </div>
         </section>
-        <div className="px-3 pt-2 pb-3">
+        <div className="px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           {hasInvalidItems && (
             <p className="mb-1 text-center text-sm font-medium text-amber-700">
               Hay un producto inválido. Vaciá el carrito y agregalo nuevamente.

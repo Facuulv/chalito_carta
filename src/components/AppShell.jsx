@@ -43,11 +43,11 @@ export default function AppShell({ children }) {
   }, [isSidebarOpen])
 
   return (
-    <div className="min-h-screen w-full bg-neutral-100">
-      <div className="relative mx-auto min-h-screen w-full max-w-[480px] overflow-hidden bg-white">
+    <div className="h-[100dvh] w-full overflow-hidden bg-neutral-100">
+      <div className="relative mx-auto flex h-full w-full max-w-[480px] flex-col overflow-hidden bg-white md:max-w-none">
         <Navbar onMenuClick={() => setIsSidebarOpen((prev) => !prev)} />
 
-        <div className="relative min-h-[calc(100dvh-3.25rem)] overflow-hidden">
+        <div className="relative min-h-0 flex-1 overflow-hidden">
           <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
           <div
@@ -61,11 +61,11 @@ export default function AppShell({ children }) {
           />
 
           <div
-            className={`relative z-10 min-h-full transition-transform duration-[400ms] ease-out ${
+            className={`relative z-10 h-full min-h-0 transition-transform duration-[400ms] ease-out ${
               isSidebarOpen ? "translate-x-64" : "translate-x-0"
             }`}
           >
-            <main className="min-h-[calc(100dvh-3.25rem)] w-full">
+            <main className="h-full w-full overflow-hidden">
               {children}
             </main>
           </div>
@@ -73,22 +73,24 @@ export default function AppShell({ children }) {
 
         {hasItems && isOpen && !isCheckout && !isProductoDetalle && !isBuscar && (
           <div
-            className="fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] transition-all duration-[400ms] ease-out"
+            className="fixed inset-x-0 bottom-0 z-30 transition-all duration-[400ms] ease-out"
             style={{
               transform:
                 isDesktop || !isSidebarOpen
-                  ? "translateX(-50%)"
-                  : "translate(calc(-50% + 16rem), 0)",
+                  ? "translateX(0)"
+                  : "translateX(16rem)",
             }}
           >
-            <button
-              type="button"
-              onClick={() => router.push("/checkout")}
-              className="font-mini-footer flex h-[45px] w-full items-center justify-between bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 p-[0.9em] text-base font-medium leading-none text-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] transition-all duration-200 hover:brightness-110"
-            >
-              <span>Ver mi pedido</span>
-              <span className="whitespace-nowrap text-[1.2em] font-extrabold">{formatPrice(total)}</span>
-            </button>
+            <div className="mx-auto w-full max-w-[480px] md:max-w-none">
+              <button
+                type="button"
+                onClick={() => router.push("/checkout")}
+                className="font-mini-footer flex h-[45px] w-full items-center justify-between bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 p-[0.9em] text-base font-medium leading-none text-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] transition-all duration-200 hover:brightness-110"
+              >
+                <span>Ver mi pedido</span>
+                <span className="whitespace-nowrap text-[1.2em] font-extrabold">{formatPrice(total)}</span>
+              </button>
+            </div>
           </div>
         )}
       </div>

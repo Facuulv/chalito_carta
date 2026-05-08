@@ -193,12 +193,12 @@ function CheckoutResultadoContent() {
 
   return (
     <div
-      className="flex h-[calc(100dvh-3.25rem)] min-h-0 w-full flex-col overflow-hidden bg-white"
+      className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white"
       style={{
         fontFamily: 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
       }}
     >
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm md:px-6 lg:px-8">
         <Link
           href="/"
           className="flex shrink-0 items-center justify-center header-title-color"
@@ -211,63 +211,65 @@ function CheckoutResultadoContent() {
         </h1>
       </header>
 
-      <main className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto px-4 py-5">
-        <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
-          <div className="flex items-center gap-3">
-            {getStatusIcon(uiState)}
-            <h2 className="text-lg font-bold text-slate-900">{statusContent.title}</h2>
-          </div>
+      <div className="app-scroll-y no-scrollbar flex min-h-0 flex-1 flex-col">
+        <main className="mx-auto flex w-full max-w-[480px] flex-1 flex-col px-4 py-5 md:max-w-5xl md:px-6 lg:px-8">
+          <section className="rounded-xl border border-neutral-200 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              {getStatusIcon(uiState)}
+              <h2 className="text-lg font-bold text-slate-900">{statusContent.title}</h2>
+            </div>
 
-          <p className="mt-2 text-sm text-slate-700">{statusContent.message}</p>
+            <p className="mt-2 text-sm text-slate-700">{statusContent.message}</p>
 
-          {showPollingHint && (
-            <p className="mt-2 text-xs text-slate-500">
-              Reintento {pollAttempt + 1} de {MAX_POLL_ATTEMPTS + 1}.
-            </p>
-          )}
+            {showPollingHint && (
+              <p className="mt-2 text-xs text-slate-500">
+                Reintento {pollAttempt + 1} de {MAX_POLL_ATTEMPTS + 1}.
+              </p>
+            )}
 
-          {uiState === UI_STATES.error && errorMessage && (
-            <p className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMessage}</p>
-          )}
-        </section>
+            {uiState === UI_STATES.error && errorMessage && (
+              <p className="mt-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{errorMessage}</p>
+            )}
+          </section>
 
-        <section className="mt-4 rounded-xl border border-neutral-200 bg-[#f8f8f8] p-4">
-          <div className="flex items-center justify-between text-sm">
-            <span className="font-semibold text-slate-700">Pedido</span>
-            <strong className="text-slate-900">#{displayPedidoId || "-"}</strong>
-          </div>
-          <div className="mt-2 flex items-center justify-between text-sm">
-            <span className="font-semibold text-slate-700">Estado del pedido</span>
-            <strong className="text-slate-900">{data?.estadoPedido ?? "-"}</strong>
-          </div>
-          <div className="mt-2 flex items-center justify-between text-sm">
-            <span className="font-semibold text-slate-700">Total</span>
-            <strong className="text-slate-900">
-              {hasTotal ? formatPrice(Number(data.total)) : "-"}
-              {hasTotal && data?.moneda ? ` ${data.moneda}` : ""}
-            </strong>
-          </div>
-        </section>
+          <section className="mt-4 rounded-xl border border-neutral-200 bg-[#f8f8f8] p-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-semibold text-slate-700">Pedido</span>
+              <strong className="text-slate-900">#{displayPedidoId || "-"}</strong>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-sm">
+              <span className="font-semibold text-slate-700">Estado del pedido</span>
+              <strong className="text-slate-900">{data?.estadoPedido ?? "-"}</strong>
+            </div>
+            <div className="mt-2 flex items-center justify-between text-sm">
+              <span className="font-semibold text-slate-700">Total</span>
+              <strong className="text-slate-900">
+                {hasTotal ? formatPrice(Number(data.total)) : "-"}
+                {hasTotal && data?.moneda ? ` ${data.moneda}` : ""}
+              </strong>
+            </div>
+          </section>
 
-        <div className="mt-5 flex gap-3">
-          {showRetry && (
-            <button
-              type="button"
-              onClick={() => fetchStatus({ attempt: 0, withLoading: true })}
-              className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+          <div className="mt-5 flex gap-3">
+            {showRetry && (
+              <button
+                type="button"
+                onClick={() => fetchStatus({ attempt: 0, withLoading: true })}
+                className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+              >
+                <RefreshCcw size={16} />
+                Reintentar
+              </button>
+            )}
+            <Link
+              href="/"
+              className="flex h-11 flex-1 items-center justify-center rounded-md bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
-              <RefreshCcw size={16} />
-              Reintentar
-            </button>
-          )}
-          <Link
-            href="/"
-            className="flex h-11 flex-1 items-center justify-center rounded-md bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-          >
-            Volver al inicio
-          </Link>
-        </div>
-      </main>
+              Volver al inicio
+            </Link>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
@@ -276,13 +278,15 @@ export default function CheckoutResultadoPage() {
   return (
     <Suspense
       fallback={
-        <div
-          className="flex h-[calc(100dvh-3.25rem)] items-center justify-center bg-white"
-          style={{
-            fontFamily: 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
-          }}
-        >
-          <p className="text-sm text-slate-500">Cargando...</p>
+        <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
+          <div
+            className="flex flex-1 min-h-0 items-center justify-center px-4"
+            style={{
+              fontFamily: 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
+            }}
+          >
+            <p className="text-sm text-slate-500">Cargando...</p>
+          </div>
         </div>
       }
     >

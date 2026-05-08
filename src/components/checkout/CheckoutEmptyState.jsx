@@ -5,8 +5,8 @@ import { ArrowLeft, ShoppingCart } from "lucide-react";
 
 export default function CheckoutEmptyState() {
   return (
-    <div className="flex h-[calc(100dvh-3.25rem)] min-h-0 w-full flex-col overflow-hidden bg-white">
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm md:px-6 lg:px-8">
         <Link
           href="/"
           className="flex shrink-0 items-center justify-center header-title-color"
@@ -18,9 +18,9 @@ export default function CheckoutEmptyState() {
           Mi pedido
         </h1>
       </header>
-      <div className="flex flex-1 flex-col items-center justify-center px-4 py-8">
+      <div className="flex flex-1 min-h-0 flex-col items-center justify-center px-4 py-8">
         <div
-          className="flex min-h-[40vh] w-full max-w-md flex-col items-center justify-center rounded-2xl bg-white px-6 text-center shadow-sm ring-1 ring-neutral-200"
+          className="flex w-full max-w-md flex-col items-center justify-center rounded-2xl bg-white px-6 py-8 text-center shadow-sm ring-1 ring-neutral-200"
           style={{
             fontFamily:
               'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',

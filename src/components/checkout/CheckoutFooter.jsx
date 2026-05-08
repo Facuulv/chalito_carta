@@ -4,8 +4,8 @@ import { formatPrice } from "@/utils/format/price";
 
 export default function CheckoutFooter({ isOpen, total, onConfirm }) {
   return (
-    <footer className="fixed bottom-0 left-1/2 z-30 w-full max-w-[480px] -translate-x-1/2">
-      <div className="w-full border-t border-neutral-200/60 bg-white/95 px-3 pt-2 pb-3 backdrop-blur">
+    <footer className="fixed inset-x-0 bottom-0 z-30">
+      <div className="mx-auto w-full max-w-[480px] border-t border-neutral-200/60 bg-white/95 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur md:max-w-5xl">
         {!isOpen && (
           <p className="mb-2 text-center text-sm font-medium text-amber-700">
             El local está cerrado. No se pueden enviar pedidos en este momento.

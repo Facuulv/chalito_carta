@@ -156,18 +156,20 @@ export default function CheckoutFinalizarPage() {
 
   if (pedidoCreado) {
     return (
-      <div className="min-h-[calc(100vh-3rem)] w-full bg-neutral-100 px-4 py-6">
-        <div className="rounded-xl border border-green-200 bg-green-50 px-4 py-8 text-center">
-          <p className="text-lg font-bold text-green-800">Pedido enviado</p>
-          <p className="mt-1 text-sm text-green-700">Número #{pedidoCreado.id}</p>
-          <p className="mt-0.5 text-sm text-green-700">Estado: {pedidoCreado.estado}</p>
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="mt-6 inline-block rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
-          >
-            Volver al inicio
-          </button>
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
+        <div className="app-scroll-y flex min-h-0 flex-1 flex-col px-4 py-6">
+          <div className="mx-auto w-full max-w-[480px] rounded-xl border border-green-200 bg-green-50 px-4 py-8 text-center md:max-w-3xl">
+            <p className="text-lg font-bold text-green-800">Pedido enviado</p>
+            <p className="mt-1 text-sm text-green-700">Número #{pedidoCreado.id}</p>
+            <p className="mt-0.5 text-sm text-green-700">Estado: {pedidoCreado.estado}</p>
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="mt-6 inline-block rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+            >
+              Volver al inicio
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -175,16 +177,20 @@ export default function CheckoutFinalizarPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[calc(100vh-3rem)] w-full bg-neutral-100 px-4 py-6">
-        <Link
-          href="/checkout"
-          className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
-          aria-label="Volver al checkout"
-        >
-          <ArrowLeft size={20} />
-        </Link>
-        <div className="rounded-xl border border-neutral-200 bg-white px-4 py-6 text-center text-sm text-slate-600">
-          Tu carrito está vacío. Volvé al checkout para agregar productos.
+      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
+        <div className="app-scroll-y flex min-h-0 flex-1 flex-col px-4 py-6">
+          <div className="mx-auto w-full max-w-[480px] md:max-w-3xl">
+            <Link
+              href="/checkout"
+              className="mb-4 inline-flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm"
+              aria-label="Volver al checkout"
+            >
+              <ArrowLeft size={20} />
+            </Link>
+            <div className="rounded-xl border border-neutral-200 bg-white px-4 py-6 text-center text-sm text-slate-600">
+              Tu carrito está vacío. Volvé al checkout para agregar productos.
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -192,12 +198,12 @@ export default function CheckoutFinalizarPage() {
 
   return (
     <div
-      className="flex h-[calc(100dvh-3.25rem)] min-h-0 w-full flex-col overflow-hidden bg-white"
+      className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-white"
       style={{
         fontFamily: 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
       }}
     >
-      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm">
+      <header className="sticky top-0 z-40 flex shrink-0 min-h-[68px] items-center gap-3 border-b border-neutral-200 bg-slate-200 px-4 py-5 shadow-sm md:px-6 lg:px-8">
         <Link
           href="/checkout"
           className="flex shrink-0 items-center justify-center header-title-color"
@@ -212,9 +218,9 @@ export default function CheckoutFinalizarPage() {
 
       <div
         ref={scrollContainerRef}
-        className="no-scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
+        className="app-scroll-y no-scrollbar flex min-h-0 flex-1 flex-col"
       >
-        <main className="space-y-6 px-4 py-4 pb-44">
+        <main className="mx-auto w-full max-w-[480px] space-y-6 px-4 py-4 pb-[calc(12rem+env(safe-area-inset-bottom))] md:max-w-5xl md:px-6 lg:px-8">
           {!isOpen && (
             <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center">
               <p className="text-sm font-semibold text-amber-900">

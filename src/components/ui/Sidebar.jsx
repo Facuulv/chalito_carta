@@ -68,7 +68,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {canUsePortal && showInfoModal && createPortal(
         <div
-          className="fixed left-1/2 top-0 z-[100] flex min-h-screen w-full max-w-[480px] -translate-x-1/2 items-center justify-center bg-black/45 px-4"
+          className="fixed inset-0 z-[100] flex min-h-[100dvh] w-full items-center justify-center bg-black/45 px-4"
           onClick={(e) => e.target === e.currentTarget && setShowInfoModal(false)}
         >
           <div className="modal-slide-down relative w-full max-w-sm rounded-lg bg-white p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
@@ -128,7 +128,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {canUsePortal && showLocationModal && createPortal(
         <div
-          className="fixed left-1/2 top-0 z-[100] flex min-h-screen w-full max-w-[480px] -translate-x-1/2 items-center justify-center bg-black/45 px-4"
+          className="fixed inset-0 z-[100] flex min-h-[100dvh] w-full items-center justify-center bg-black/45 px-4"
           onClick={(e) => e.target === e.currentTarget && setShowLocationModal(false)}
         >
           <div className="modal-slide-down relative w-full max-w-sm rounded-lg bg-white p-4 shadow-lg" onClick={(e) => e.stopPropagation()}>
