@@ -123,7 +123,7 @@ export default function CheckoutFinalizarPage() {
     try {
       sessionStorage.removeItem("checkout_direccion");
       sessionStorage.removeItem("checkout_address");
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   const isEnvio = tipoEntrega === TIPOS_ENTREGA.envio;
@@ -270,7 +270,7 @@ export default function CheckoutFinalizarPage() {
               </div>
             </div>
           ) : null}
-          
+
           {!isOpen && (
             <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-center">
               <p className="text-sm font-semibold text-amber-900">
