@@ -58,7 +58,7 @@ export default function CheckoutFooter({ isOpen, total, onConfirm }) {
               height: "45px",
               padding: "0 .9em",
               borderRadius: "4px",
-              background: "#88e1f2",
+              background: "var(--brand-secondary, #88e1f2)",
             }}
           >
             Confirmar pedido

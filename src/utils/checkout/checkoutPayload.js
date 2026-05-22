@@ -19,7 +19,7 @@ function buildScheduledTimeIso(horarioProgramado) {
   return scheduled.toISOString();
 }
 
-export function buildCheckoutPayload({ normalized, items }) {
+export function buildCheckoutPayload({ normalized, items, couponCode }) {
   const when = normalized.cuando; // "CUANTO_ANTES" | "HORA_PROGRAMADA"
   const scheduledTime =
     when === "HORA_PROGRAMADA"
@@ -52,12 +52,13 @@ export function buildCheckoutPayload({ normalized, items }) {
         conCuantoAbona: normalized.efectivoConCuanto,
         cashGiven: normalized.efectivoConCuanto,
       }),
+    ...(couponCode && { couponCode }),
   };
 
   return { payload, when, scheduledTime };
 }
 
-export function buildMercadoPagoCheckoutPayload({ normalized, items }) {
+export function buildMercadoPagoCheckoutPayload({ normalized, items, couponCode }) {
   const isScheduledDelivery = normalized.cuando === "HORA_PROGRAMADA";
 
   return {
@@ -85,6 +86,7 @@ export function buildMercadoPagoCheckoutPayload({ normalized, items }) {
         .filter(Number.isFinite)
         .map((id) => ({ id })),
     })),
+    ...(couponCode && { couponCode }),
   };
 }
 

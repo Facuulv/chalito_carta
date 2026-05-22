@@ -17,6 +17,7 @@ import CustomerSection from "@/components/checkout/finalizar/CustomerSection";
 import DeliverySection from "@/components/checkout/finalizar/DeliverySection";
 import ScheduleSection from "@/components/checkout/finalizar/ScheduleSection";
 import PaymentSection from "@/components/checkout/finalizar/PaymentSection";
+import CouponSection from "@/components/checkout/finalizar/CouponSection";
 import OrderSummaryFooter from "@/components/checkout/finalizar/OrderSummaryFooter";
 import { useCheckoutSubmit } from "@/hooks/checkout/useCheckoutSubmit";
 import { guardarDatos, usarDatosPrevios } from "@/hooks/checkout/useCheckoutPersistence";
@@ -65,6 +66,8 @@ export default function CheckoutFinalizarPage() {
   const [fieldErrors, setFieldErrors] = useState({});
   const [resumenOpen, setResumenOpen] = useState(false);
   const [datosPrevios, setDatosPrevios] = useState(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [pricingQuote, setPricingQuote] = useState(null);
   const montoEfectivoInputRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const prevMetodoPagoRef = useRef(metodoPago);
@@ -144,9 +147,14 @@ export default function CheckoutFinalizarPage() {
       })),
     [items]
   );
+  const checkoutTotal = pricingQuote?.totalFinal ?? total;
+  const couponCode = appliedCoupon?.codigo ?? null;
+
   const handleSubmit = useCheckoutSubmit({
     items,
     total,
+    checkoutTotal,
+    couponCode,
     isOpen,
     hasInvalidItems,
     isSubmitting,
@@ -336,6 +344,27 @@ export default function CheckoutFinalizarPage() {
             clearFieldError={clearFieldError}
             montoEfectivoInputRef={montoEfectivoInputRef}
           />
+
+          <CouponSection
+            items={items}
+            appliedCoupon={appliedCoupon}
+            pricingQuote={pricingQuote}
+            onApply={(coupon) => {
+              setAppliedCoupon({
+                codigo: coupon.codigo,
+                montoDescuento: coupon.montoDescuento,
+              });
+              setPricingQuote({
+                totalFinal: coupon.totalFinal,
+                montoDescuento: coupon.montoDescuento,
+                subtotalBruto: coupon.subtotalBruto,
+              });
+            }}
+            onClear={() => {
+              setAppliedCoupon(null);
+              setPricingQuote(null);
+            }}
+          />
         </main>
       </div>
 
@@ -344,7 +373,9 @@ export default function CheckoutFinalizarPage() {
         setResumenOpen={setResumenOpen}
         resumenItems={resumenItems}
         hasInvalidItems={hasInvalidItems}
-        total={total}
+        total={checkoutTotal}
+        subtotalBruto={pricingQuote?.subtotalBruto}
+        montoDescuento={pricingQuote?.montoDescuento ?? 0}
         handleSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         isOpen={isOpen}

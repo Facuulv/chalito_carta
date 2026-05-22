@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { isStoreOpen } from "@/utils/storeSchedule";
+import { canAcceptOnlineOrders } from "@/services/estadoTiendaService";
 
 /**
  * Shape definitivo de item de carrito:
@@ -65,7 +65,7 @@ export const useCarritoStore = create(
       searchQuery: "",
 
       addItem: (item) => {
-        if (!isStoreOpen()) return;
+        if (!canAcceptOnlineOrders()) return;
         set((state) => {
       const incomingExtras = item.extrasSeleccionados ?? [];
       const incomingIds = getExtraIds({ extrasSeleccionados: incomingExtras });

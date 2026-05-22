@@ -5,8 +5,11 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { ExternalLink, Home, Info, Instagram, MapPin, X } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
+import { useBranding } from "@/hooks/useBranding";
 
 export default function Sidebar({ isOpen, onClose }) {
+  const { branding } = useBranding();
+  const businessName = branding.nombreNegocio || "El Chalito";
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const canUsePortal = typeof document !== "undefined";
@@ -148,7 +151,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 <MapPin size={32} className="text-blue-900" />
               </div>
               <h3 className="text-2xl font-medium text-slate-800">Ubicación</h3>
-              <p className="mt-3 text-sm text-slate-500">El Chalito</p>
+              <p className="mt-3 text-sm text-slate-500">{businessName}</p>
             </div>
 
             <div className="mt-3 overflow-hidden rounded-lg border border-neutral-200">

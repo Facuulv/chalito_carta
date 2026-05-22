@@ -15,6 +15,8 @@ import { isStoreHoursValidationEnabled } from "@/config/storeHoursConfig";
 export function useCheckoutSubmit({
   items,
   total,
+  checkoutTotal,
+  couponCode,
   isOpen,
   hasInvalidItems,
   isSubmitting,
@@ -41,7 +43,15 @@ export function useCheckoutSubmit({
 
     setFieldErrors({});
 
-    const { ok, errors, firstError, normalized } = validateCheckoutForm(formValues, total);
+    const totalParaValidar =
+      checkoutTotal != null && Number.isFinite(Number(checkoutTotal))
+        ? Number(checkoutTotal)
+        : total;
+
+    const { ok, errors, firstError, normalized } = validateCheckoutForm(
+      formValues,
+      totalParaValidar
+    );
 
     if (!ok) {
       setFieldErrors(errors);
@@ -59,6 +69,7 @@ export function useCheckoutSubmit({
         const payloadMercadoPago = buildMercadoPagoCheckoutPayload({
           normalized,
           items,
+          couponCode,
         });
         const mpResponse = await crearCheckoutMercadoPago(payloadMercadoPago);
         const urlPago = mpResponse?.data?.url_pago ?? mpResponse?.url_pago;
@@ -73,7 +84,7 @@ export function useCheckoutSubmit({
         return;
       }
 
-      const { payload } = buildCheckoutPayload({ normalized, items });
+      const { payload } = buildCheckoutPayload({ normalized, items, couponCode });
       const data = await crearPedidoPublico(payload);
       const { pedidoId, estado } = resolveCreatedOrderMeta(data);
       setPedidoCreado({ id: pedidoId, estado });
@@ -115,6 +126,8 @@ export function useCheckoutSubmit({
     setFieldErrors,
     formValues,
     total,
+    checkoutTotal,
+    couponCode,
     setIsSubmitting,
     clearCart,
     setPedidoCreado,

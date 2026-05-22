@@ -9,6 +9,8 @@ export default function OrderSummaryFooter({
   resumenItems,
   hasInvalidItems,
   total,
+  subtotalBruto,
+  montoDescuento,
   handleSubmit,
   isSubmitting,
   isOpen,
@@ -81,6 +83,20 @@ export default function OrderSummaryFooter({
               El envio se cobra aparte y no esta incluido en este total.
             </p>
           )}
+          {montoDescuento > 0 && (
+            <>
+              {subtotalBruto != null && (
+                <div className="mb-1 flex items-center justify-between px-3 text-sm text-slate-600">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotalBruto)}</span>
+                </div>
+              )}
+              <div className="mb-1 flex items-center justify-between px-3 text-sm text-green-700">
+                <span>Descuento cupón</span>
+                <span>-{formatPrice(montoDescuento)}</span>
+              </div>
+            </>
+          )}
           <div className="mb-0 flex items-center justify-between px-3">
             <span
               style={{
@@ -128,7 +144,7 @@ export default function OrderSummaryFooter({
                 height: "45px",
                 padding: "0 .9em",
                 borderRadius: "4px",
-                background: "#88e1f2",
+                background: "var(--brand-secondary, #88e1f2)",
               }}
             >
               {isSubmitting ? "Enviando..." : "Enviar pedido"}

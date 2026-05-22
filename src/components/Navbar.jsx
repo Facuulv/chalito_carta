@@ -6,8 +6,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Menu, Search, ShoppingCart, X } from "lucide-react";
 import { useCarritoStore } from "@/store/useCarritoStore";
+import { useBranding } from "@/hooks/useBranding";
 
 export default function Navbar({ onMenuClick }) {
+  const { branding } = useBranding();
+  const logoSrc = branding.logoUrl || "/logo-empresa.png";
+  const logoAlt = branding.nombreNegocio ? `Logo ${branding.nombreNegocio}` : "Logo";
+  const isRemoteLogo = Boolean(branding.logoUrl);
   const router = useRouter();
   const items = useCarritoStore((state) => state.items);
   const searchQuery = useCarritoStore((state) => state.searchQuery);
@@ -44,7 +49,12 @@ export default function Navbar({ onMenuClick }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 shadow-lg">
+    <header
+      className="sticky top-0 z-50 w-full shadow-lg"
+      style={{
+        background: `linear-gradient(to right, color-mix(in srgb, var(--brand-primary) 85%, black), var(--brand-primary), color-mix(in srgb, var(--brand-primary) 85%, black))`,
+      }}
+    >
       <div className="flex h-13 w-full items-center justify-between px-3">
         {isSearchOpen ? (
           <>
@@ -63,14 +73,23 @@ export default function Navbar({ onMenuClick }) {
                 className="relative -ml-2.5 flex h-10 w-32 items-center"
                 aria-label="Ir al inicio"
               >
-                <Image
-                  src="/logo-empresa.png"
-                  alt="Logo El Chalito"
-                  fill
-                  sizes="128px"
-                  className="object-contain [transform:translateY(-2px)]"
-                  priority
-                />
+                {isRemoteLogo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={logoSrc}
+                    alt={logoAlt}
+                    className="absolute inset-0 h-full w-full object-contain [transform:translateY(-2px)]"
+                  />
+                ) : (
+                  <Image
+                    src={logoSrc}
+                    alt={logoAlt}
+                    fill
+                    sizes="128px"
+                    className="object-contain [transform:translateY(-2px)]"
+                    priority
+                  />
+                )}
               </Link>
             </div>
 
@@ -113,14 +132,23 @@ export default function Navbar({ onMenuClick }) {
                 className="relative -ml-2.5 flex h-10 w-32 items-center"
                 aria-label="Ir al inicio"
               >
-                <Image
-                  src="/logo-empresa.png"
-                  alt="Logo El Chalito"
-                  fill
-                  sizes="128px"
-                  className="object-contain [transform:translateY(-2px)]"
-                  priority
-                />
+                {isRemoteLogo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={logoSrc}
+                    alt={logoAlt}
+                    className="absolute inset-0 h-full w-full object-contain [transform:translateY(-2px)]"
+                  />
+                ) : (
+                  <Image
+                    src={logoSrc}
+                    alt={logoAlt}
+                    fill
+                    sizes="128px"
+                    className="object-contain [transform:translateY(-2px)]"
+                    priority
+                  />
+                )}
               </Link>
             </div>
 

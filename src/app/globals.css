@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-primary: #1d4ed8;
+  --brand-secondary: #88e1f2;
 }
 
 @theme inline {
@@ -95,7 +97,11 @@ body {
 }
 
 .header-title-color {
-  color: lab(39 -1.08 -32.18);
+  color: var(--brand-primary, lab(39 -1.08 -32.18));
+}
+
+.btn-brand-secondary {
+  background: var(--brand-secondary, #88e1f2);
 }
 
 .font-category-card {

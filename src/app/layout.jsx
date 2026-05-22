@@ -1,6 +1,7 @@
 import "./globals.css"
 import { Anton, Lato } from "next/font/google"
 import AppShell from "@/components/AppShell"
+import BrandingProvider from "@/components/BrandingProvider"
 import { Toaster } from "sonner"
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton" })
@@ -16,7 +17,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body className={`bg-neutral-100 ${anton.variable} ${lato.variable}`}>
-        <AppShell>{children}</AppShell>
+        <BrandingProvider>
+          <AppShell>{children}</AppShell>
+        </BrandingProvider>
         <Toaster position="top-center" richColors closeButton toastOptions={{ duration: 3500 }} />
       </body>
     </html>
