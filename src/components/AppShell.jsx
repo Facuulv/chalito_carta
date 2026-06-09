@@ -85,10 +85,10 @@ export default function AppShell({ children }) {
               <button
                 type="button"
                 onClick={() => router.push("/checkout")}
-                className="font-mini-footer flex h-[45px] w-full items-center justify-between bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 p-[0.9em] text-base font-medium leading-none text-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] transition-all duration-200 hover:brightness-110"
+                className="brand-navbar-gradient font-mini-footer flex h-[45px] w-full items-center justify-between p-[0.9em] text-base font-medium leading-none text-white shadow-[0_-4px_12px_rgba(0,0,0,0.08)] transition-all duration-200 hover:brightness-110"
               >
                 <span>Ver mi pedido</span>
-                <span className="whitespace-nowrap text-[1.2em] font-extrabold">{formatPrice(total)}</span>
+                <span className="whitespace-nowrap text-[1.2em] font-extrabold text-[var(--brand-accent)]">{formatPrice(total)}</span>
               </button>
             </div>
           </div>

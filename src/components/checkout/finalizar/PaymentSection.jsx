@@ -49,14 +49,14 @@ export default function PaymentSection({
                   alignItems: "center",
                   flexDirection: "column",
                   gap: "3px",
-                  border: "2px solid #21243d",
+                  border: "2px solid var(--brand-primary)",
                   padding: ".6em .7em",
                   fontWeight: selected ? 900 : 600,
                   lineHeight: 1.2,
                   borderRadius: "5px",
-                  boxShadow: "1px 2px 5px #0003",
-                  backgroundColor: selected ? "#21243d" : "#fff",
-                  color: selected ? "#fff" : "#21243d",
+                  boxShadow: "1px 2px 5px rgba(0,0,0,0.2)",
+                  backgroundColor: selected ? "var(--brand-primary)" : "#fff",
+                  color: selected ? "#fff" : "var(--text-primary)",
                 }}
               >
                 {metodo.label}
@@ -67,7 +67,7 @@ export default function PaymentSection({
 
         {metodoPago === "efectivo" && (
           <label className="block">
-            <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+            <span className="mb-1 block text-sm text-primary" style={{ fontWeight: 700 }}>
               ¿Con cuánto vas a pagar?
             </span>
             <input

@@ -35,8 +35,7 @@ export default function CheckoutEmptyState() {
           </p>
           <Link
             href="/"
-            className="mt-6 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition hover:opacity-90"
-            style={{ backgroundColor: "#21243d" }}
+            className="btn-brand-secondary mt-6 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition"
           >
             Ir a la carta
           </Link>

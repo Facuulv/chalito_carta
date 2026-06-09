@@ -297,7 +297,7 @@ function CheckoutResultadoContent() {
             )}
             <Link
               href="/"
-              className="flex h-11 flex-1 items-center justify-center rounded-md bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="btn-brand-secondary flex h-11 flex-1 items-center justify-center rounded-md px-3 text-sm font-semibold"
             >
               Volver al inicio
             </Link>

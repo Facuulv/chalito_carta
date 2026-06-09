@@ -99,24 +99,24 @@ export default function OrderSummaryFooter({
           )}
           <div className="mb-0 flex items-center justify-between px-3">
             <span
+              className="text-primary"
               style={{
                 fontFamily:
                   'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
                 fontSize: "14px",
                 fontWeight: 600,
-                color: "#21243d",
               }}
             >
               Total:
             </span>
             <strong
+              className="text-primary"
               style={{
                 fontFamily:
                   'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
                 fontSize: "1.4em",
                 fontWeight: 900,
                 letterSpacing: "-0.05em",
-                color: "#21243d",
                 WebkitFontSmoothing: "antialiased",
                 MozOsxFontSmoothing: "grayscale",
               }}
@@ -130,11 +130,7 @@ export default function OrderSummaryFooter({
               type="button"
               onClick={handleSubmit}
               disabled={hasInvalidItems || isSubmitting || !isOpen}
-              className={`w-full transition text-[#21243d] hover:opacity-90 hover:text-slate-600 ${
-                hasInvalidItems || isSubmitting || !isOpen
-                  ? "cursor-not-allowed opacity-50 hover:opacity-50 hover:text-[#21243d]"
-                  : ""
-              }`}
+              className="btn-brand-secondary w-full rounded"
               style={{
                 fontFamily:
                   'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
@@ -143,8 +139,6 @@ export default function OrderSummaryFooter({
                 fontSize: "16px",
                 height: "45px",
                 padding: "0 .9em",
-                borderRadius: "4px",
-                background: "var(--brand-secondary, #88e1f2)",
               }}
             >
               {isSubmitting ? "Enviando..." : "Enviar pedido"}

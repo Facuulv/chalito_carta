@@ -192,7 +192,7 @@ export default function CheckoutFinalizarPage() {
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="mt-6 inline-block rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="btn-brand-secondary mt-6 inline-block rounded-xl px-6 py-2.5 text-sm font-semibold"
             >
               Volver al inicio
             </button>
@@ -249,12 +249,12 @@ export default function CheckoutFinalizarPage() {
       >
         <main className="mx-auto w-full max-w-[480px] space-y-6 px-4 py-4 pb-[calc(12rem+env(safe-area-inset-bottom))] md:max-w-5xl md:px-6 lg:px-8">
           {datosPrevios ? (
-            <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
-              <p className="text-sm text-blue-900 mb-2">¿Querés usar los datos de tu último pedido?</p>
+            <div className="rounded-xl border border-brand-accent-soft bg-brand-accent-soft px-4 py-3">
+              <p className="mb-2 text-sm text-[var(--text-primary)]">¿Querés usar los datos de tu último pedido?</p>
               <div className="flex gap-2">
                 <button
                   type="button"
-                  className="rounded-lg bg-blue-700 px-3 py-1.5 text-xs font-semibold text-white"
+                  className="btn-brand-secondary rounded-lg px-3 py-1.5 text-xs font-semibold"
                   onClick={() => {
                     setNombre(datosPrevios.nombre || "");
                     setTelefono(datosPrevios.telefono || "");
@@ -270,7 +270,7 @@ export default function CheckoutFinalizarPage() {
                 </button>
                 <button
                   type="button"
-                  className="rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-xs font-semibold text-blue-800"
+                  className="rounded-lg border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-[var(--text-primary)] transition hover:bg-neutral-50"
                   onClick={() => setDatosPrevios(null)}
                 >
                   Ignorar

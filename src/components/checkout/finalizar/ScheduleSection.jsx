@@ -25,7 +25,7 @@ export default function ScheduleSection({
           }}
           className={`rounded-lg px-2 py-2 text-sm font-semibold transition ${
             tipoDemora === TIPOS_DEMORA.cuantoAntes
-              ? "bg-[#21243d] text-white"
+              ? "bg-brand-selected"
               : "text-slate-700 hover:bg-neutral-100"
           }`}
         >
@@ -36,7 +36,7 @@ export default function ScheduleSection({
           onClick={() => setTipoDemora(TIPOS_DEMORA.programado)}
           className={`rounded-lg px-2 py-2 text-sm font-semibold transition ${
             tipoDemora === TIPOS_DEMORA.programado
-              ? "bg-[#21243d] text-white"
+              ? "bg-brand-selected"
               : "text-slate-700 hover:bg-neutral-100"
           }`}
         >
@@ -46,7 +46,7 @@ export default function ScheduleSection({
 
       {tipoDemora === TIPOS_DEMORA.programado && (
         <label className="block">
-          <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+          <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
             ¿Para qué hora?
           </span>
           <input

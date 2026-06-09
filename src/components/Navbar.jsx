@@ -49,12 +49,7 @@ export default function Navbar({ onMenuClick }) {
   };
 
   return (
-    <header
-      className="sticky top-0 z-50 w-full shadow-lg"
-      style={{
-        background: `linear-gradient(to right, color-mix(in srgb, var(--brand-primary) 85%, black), var(--brand-primary), color-mix(in srgb, var(--brand-primary) 85%, black))`,
-      }}
-    >
+    <header className="brand-navbar-gradient sticky top-0 z-50 w-full shadow-lg">
       <div className="flex h-13 w-full items-center justify-between px-3">
         {isSearchOpen ? (
           <>

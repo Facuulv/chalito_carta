@@ -3,8 +3,15 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --brand-primary: #1d4ed8;
-  --brand-secondary: #88e1f2;
+  --text-primary: #171717;
+  --brand-primary: #0d0d0d;
+  --brand-primary-strong: #171717;
+  --brand-secondary: #ea580c;
+  --brand-accent: #f97316;
+  --brand-accent-soft: #fff7ed;
+  --brand-accent-muted: #ffedd5;
+  --brand-qty: #fb923c;
+  --shadow-card: 0 7px 30px -10px rgba(0, 0, 0, 0.12);
 }
 
 @theme inline {
@@ -96,12 +103,63 @@ body {
   font-family: var(--font-anton), Impact, sans-serif;
 }
 
+.brand-navbar-gradient {
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--brand-primary) 85%, black),
+    var(--brand-primary),
+    color-mix(in srgb, var(--brand-primary) 85%, black)
+  );
+}
+
 .header-title-color {
-  color: var(--brand-primary, lab(39 -1.08 -32.18));
+  color: var(--brand-primary);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.link-brand-accent {
+  color: var(--brand-accent);
+  transition: color 0.2s ease;
+}
+
+.link-brand-accent:hover {
+  color: var(--brand-secondary);
 }
 
 .btn-brand-secondary {
-  background: var(--brand-secondary, #88e1f2);
+  background: var(--brand-secondary);
+  color: #ffffff;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.btn-brand-secondary:hover:not(:disabled) {
+  background: var(--brand-accent);
+}
+
+.btn-brand-secondary:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn-brand-qty {
+  background: var(--brand-qty);
+  color: #ffffff;
+}
+
+.bg-brand-selected {
+  background: var(--brand-primary);
+  color: #ffffff;
+}
+
+.bg-brand-accent-soft {
+  background: var(--brand-accent-soft);
+}
+
+.border-brand-accent-soft {
+  border-color: var(--brand-accent-muted);
 }
 
 .font-category-card {
@@ -143,7 +201,7 @@ body {
 }
 
 .product-description {
-  color: #21243d;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 16px;
   padding: 1em 1rem 0.5em;

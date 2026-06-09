@@ -13,24 +13,24 @@ export default function CheckoutFooter({ isOpen, total, onConfirm }) {
         )}
         <div className="mb-0 flex items-center justify-between px-3">
           <span
+            className="text-primary"
             style={{
               fontFamily:
                 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
               fontSize: "14px",
               fontWeight: 600,
-              color: "#21243d",
             }}
           >
             Total:
           </span>
           <strong
+            className="text-primary"
             style={{
               fontFamily:
                 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
               fontSize: "1.4em",
               fontWeight: 900,
               letterSpacing: "-0.05em",
-              color: "#21243d",
               WebkitFontSmoothing: "antialiased",
               MozOsxFontSmoothing: "grayscale",
             }}
@@ -44,11 +44,7 @@ export default function CheckoutFooter({ isOpen, total, onConfirm }) {
             type="button"
             onClick={onConfirm}
             disabled={!isOpen}
-            className={`w-full transition text-[#21243d] ${
-              isOpen
-                ? "hover:opacity-90 hover:text-slate-600"
-                : "cursor-not-allowed opacity-50"
-            }`}
+            className="btn-brand-secondary w-full rounded"
             style={{
               fontFamily:
                 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
@@ -57,8 +53,6 @@ export default function CheckoutFooter({ isOpen, total, onConfirm }) {
               fontSize: "16px",
               height: "45px",
               padding: "0 .9em",
-              borderRadius: "4px",
-              background: "var(--brand-secondary, #88e1f2)",
             }}
           >
             Confirmar pedido

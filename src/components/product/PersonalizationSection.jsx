@@ -58,7 +58,7 @@ export default function PersonalizationSection({
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleExtra(extra.id)}
-                        className="h-4 w-4 accent-slate-900"
+                        className="h-4 w-4 accent-[var(--brand-primary)]"
                       />
                       <span className="text-sm font-medium text-slate-800">
                         {extra.nombre}

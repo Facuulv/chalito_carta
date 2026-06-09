@@ -220,7 +220,7 @@ export default function ProductoDetallePage() {
             <div className="mt-4 flex flex-col items-center gap-2">
               <Link
                 href="/"
-                className="text-sm font-medium text-blue-600 underline"
+                className="link-brand-accent text-sm font-medium underline"
               >
                 Volver a la carta
               </Link>

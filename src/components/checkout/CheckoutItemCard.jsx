@@ -34,7 +34,7 @@ export default function CheckoutItemCard({
   return (
     <div
       className="rounded-lg bg-white"
-      style={{ boxShadow: "0 7px 30px -10px #96aab480" }}
+      style={{ boxShadow: "var(--shadow-card)" }}
     >
       <article className="relative flex items-stretch gap-3 pl-0 pr-3 pt-3 pb-3">
         <div className="flex w-[5.5rem] shrink-0 items-center">
@@ -57,7 +57,7 @@ export default function CheckoutItemCard({
             <h3
               className="min-w-0 truncate uppercase"
               style={{
-                color: "#21243d",
+                color: "var(--text-primary)",
                 fontWeight: 600,
                 lineHeight: "1.2em",
                 fontSize: "14px",
@@ -114,7 +114,7 @@ export default function CheckoutItemCard({
               <button
                 type="button"
                 onClick={() => onUpdateQuantity(item.id, quantity - 1)}
-                className="flex h-6 w-6 items-center justify-center rounded bg-[#ff7c7c] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-brand-qty flex h-6 w-6 items-center justify-center rounded disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="Menos"
                 disabled={quantity <= 1}
               >
@@ -132,7 +132,7 @@ export default function CheckoutItemCard({
               <button
                 type="button"
                 onClick={() => onUpdateQuantity(item.id, quantity + 1)}
-                className="flex h-6 w-6 items-center justify-center rounded bg-[#ff7c7c] text-white"
+                className="btn-brand-qty flex h-6 w-6 items-center justify-center rounded"
                 aria-label="Más"
               >
                 <Plus size={10} strokeWidth={2.5} />

@@ -72,7 +72,7 @@ export default function CategoriaPage() {
             <ArrowLeft size={20} />
           </Link>
           <p className="text-center text-slate-600">Categoría no encontrada</p>
-          <Link href="/" className="text-sm font-semibold text-blue-600 underline">
+          <Link href="/" className="link-brand-accent text-sm font-semibold underline">
             Volver a la carta
           </Link>
         </div>

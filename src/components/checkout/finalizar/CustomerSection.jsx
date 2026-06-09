@@ -18,7 +18,7 @@ export default function CustomerSection({
 
       <div className="space-y-3">
         <label className="block">
-          <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+          <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
             Nombre y apellido
           </span>
           <input
@@ -46,7 +46,7 @@ export default function CustomerSection({
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+          <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
             Teléfono
           </span>
           <input
@@ -76,7 +76,7 @@ export default function CustomerSection({
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+          <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
             Email (opcional)
           </span>
           <input

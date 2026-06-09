@@ -1,8 +1,8 @@
 const DEFAULT_BRANDING = {
   nombreNegocio: "El Chalito",
   logoUrl: null,
-  colorPrimario: "#1D4ED8",
-  colorSecundario: "#88E1F2",
+  colorPrimario: "#0D0D0D",
+  colorSecundario: "#EA580C",
 };
 
 let cachedBranding = { ...DEFAULT_BRANDING };

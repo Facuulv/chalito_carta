@@ -25,7 +25,7 @@ export default function ProductListItemCard({ producto }) {
       />
       <div className="flex min-h-[5.5rem] flex-1 flex-col justify-between px-3 pt-3 pb-1.5">
         <h2 className="product-name">{producto.nombre}</h2>
-        <p className="font-mini-footer mt-auto ml-1 text-[#21243d]">
+        <p className="font-mini-footer mt-auto ml-1 text-primary">
           <span className="text-[15px] font-light whitespace-nowrap">Desde </span>
           <span className="product-price ml-1.5 text-[20px] whitespace-nowrap">
             {formatPrice(producto.precio)}

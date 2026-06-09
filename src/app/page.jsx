@@ -83,7 +83,7 @@ export default function HomePage() {
         <button
           type="button"
           onClick={handleRetry}
-          className="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white"
+          className="btn-brand-secondary rounded-lg px-4 py-2 text-sm font-semibold"
         >
           Reintentar
         </button>

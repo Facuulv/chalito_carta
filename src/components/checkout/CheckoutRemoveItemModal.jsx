@@ -35,7 +35,7 @@ export default function CheckoutRemoveItemModal({
               fontFamily:
                 'Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif',
               fontWeight: 700,
-              color: "#21243d",
+              color: "var(--text-primary)",
               fontSize: "1.2em",
               lineHeight: 1.4,
             }}
@@ -67,8 +67,8 @@ export default function CheckoutRemoveItemModal({
                 fontWeight: 500,
                 lineHeight: 1,
                 boxSizing: "border-box",
-                border: "1px solid #ff7c7c",
-                color: "#ff7c7c",
+                border: "1px solid #ef4444",
+                color: "#ef4444",
               }}
             >
               Cancelar
@@ -83,7 +83,7 @@ export default function CheckoutRemoveItemModal({
                 fontWeight: 500,
                 lineHeight: 1,
                 boxSizing: "border-box",
-                backgroundColor: "#ff7c7c",
+                backgroundColor: "#ef4444",
               }}
             >
               Confirmar

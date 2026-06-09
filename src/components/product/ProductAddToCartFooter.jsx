@@ -11,6 +11,12 @@ export default function ProductAddToCartFooter({
   handleAddToCart,
   precioUnitario,
 }) {
+  const qtyBtnClass =
+    "btn-brand-qty flex h-9 w-9 items-center justify-center rounded-lg disabled:opacity-50";
+  const ctaBaseClass =
+    "btn-brand-secondary flex min-w-0 items-center rounded-md px-4 py-3 transition";
+  const ctaDisabledClass = "cursor-not-allowed opacity-60";
+
   return (
     <footer className="font-mini-footer fixed inset-x-0 bottom-0 z-50">
       <div className="mx-auto flex w-full max-w-[480px] items-center justify-center gap-3 bg-[#fff] px-4 py-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:max-w-5xl">
@@ -21,18 +27,18 @@ export default function ProductAddToCartFooter({
               type="button"
               onClick={() => setPresentacionCantidad("simple", -1)}
               disabled={presentacionCantidades.simple <= 1}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7c7c] text-white disabled:opacity-50"
+              className={qtyBtnClass}
               aria-label="Menos"
             >
               <Minus size={18} strokeWidth={2.5} />
             </button>
-            <span className="min-w-[2.5rem] text-center text-xl font-bold text-[#21243d]">
+            <span className="min-w-[2.5rem] text-center text-xl font-bold text-primary">
               {presentacionCantidades.simple}
             </span>
             <button
               type="button"
               onClick={() => setPresentacionCantidad("simple", 1)}
-              className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7c7c] text-white"
+              className={qtyBtnClass}
               aria-label="Más"
             >
               <Plus size={18} strokeWidth={2.5} />
@@ -41,12 +47,10 @@ export default function ProductAddToCartFooter({
           <button
             type="button"
             disabled={presentacionCantidades.simple === 0 || !isOpen}
-            className={`flex flex-1 min-w-0 items-center rounded-md px-4 py-3 transition ${
+            className={`${ctaBaseClass} flex-1 ${
               isOpen ? "justify-between" : "justify-center"
             } ${
-              presentacionCantidades.simple === 0 || !isOpen
-                ? "cursor-not-allowed bg-[#ffd082] text-[#21243d] opacity-60"
-                : "bg-[#ffd082] text-[#21243d] hover:bg-[#f0c870] active:opacity-90"
+              presentacionCantidades.simple === 0 || !isOpen ? ctaDisabledClass : ""
             }`}
             onClick={handleAddToCart}
           >
@@ -70,7 +74,7 @@ export default function ProductAddToCartFooter({
               presentacionCantidades.cuadruple ===
               0 || !isOpen
           }
-          className={`flex w-[90%] items-center rounded-md px-4 py-3 transition ${
+          className={`${ctaBaseClass} w-[90%] ${
             isOpen ? "justify-between" : "justify-center"
           } ${
             presentacionCantidades.simple +
@@ -78,8 +82,8 @@ export default function ProductAddToCartFooter({
               presentacionCantidades.triple +
               presentacionCantidades.cuadruple ===
               0 || !isOpen
-              ? "cursor-not-allowed bg-[#ffd082] text-[#21243d] opacity-60"
-              : "bg-[#ffd082] text-[#21243d] hover:bg-[#f0c870] active:opacity-90"
+              ? ctaDisabledClass
+              : ""
           }`}
           onClick={handleAddToCart}
         >

@@ -21,7 +21,7 @@ function PresentationRow({
           type="checkbox"
           checked={checked}
           onChange={onToggle}
-          className="h-4 w-4 shrink-0 accent-slate-900"
+          className="h-4 w-4 shrink-0 accent-[var(--brand-primary)]"
           aria-label={ariaLabel}
         />
         <span className="presentation-option">{label}</span>
@@ -31,7 +31,7 @@ function PresentationRow({
           type="button"
           onClick={onDecrement}
           disabled={decrementDisabled}
-          className="flex h-8 w-8 items-center justify-center rounded bg-[#ff7c7c] text-white disabled:opacity-50"
+          className="btn-brand-qty flex h-8 w-8 items-center justify-center rounded disabled:opacity-50"
           aria-label="Menos"
         >
           <Minus size={16} strokeWidth={2.5} />
@@ -42,7 +42,7 @@ function PresentationRow({
         <button
           type="button"
           onClick={onIncrement}
-          className="flex h-8 w-8 items-center justify-center rounded bg-[#ff7c7c] text-white"
+          className="btn-brand-qty flex h-8 w-8 items-center justify-center rounded"
           aria-label="Más"
         >
           <Plus size={16} strokeWidth={2.5} />
@@ -88,7 +88,7 @@ export default function PresentationSelector({
               type="checkbox"
               checked={presentacionCantidades.simple > 0}
               onChange={() => togglePresentacionCheck("simple")}
-              className="h-4 w-4 shrink-0 accent-slate-900"
+              className="h-4 w-4 shrink-0 accent-[var(--brand-primary)]"
               aria-label={
                 isSandwiches
                   ? `Seleccionar ${productoNombre}`
@@ -104,7 +104,7 @@ export default function PresentationSelector({
               type="button"
               onClick={() => setPresentacionCantidad("simple", -1)}
               disabled={presentacionCantidades.simple <= 0}
-              className="flex h-8 w-8 items-center justify-center rounded bg-[#ff7c7c] text-white disabled:opacity-50"
+              className="btn-brand-qty flex h-8 w-8 items-center justify-center rounded disabled:opacity-50"
               aria-label="Menos"
             >
               <Minus size={16} strokeWidth={2.5} />
@@ -115,7 +115,7 @@ export default function PresentationSelector({
             <button
               type="button"
               onClick={() => setPresentacionCantidad("simple", 1)}
-              className="flex h-8 w-8 items-center justify-center rounded bg-[#ff7c7c] text-white"
+              className="btn-brand-qty flex h-8 w-8 items-center justify-center rounded"
               aria-label="Más"
             >
               <Plus size={16} strokeWidth={2.5} />

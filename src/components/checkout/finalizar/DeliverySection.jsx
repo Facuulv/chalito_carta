@@ -30,7 +30,7 @@ export default function DeliverySection({
           onClick={() => setTipoEntrega(TIPOS_ENTREGA.envio)}
           className={`rounded-lg px-2 py-2 text-sm font-semibold transition ${
             tipoEntrega === TIPOS_ENTREGA.envio
-              ? "bg-[#21243d] text-white"
+              ? "bg-brand-selected"
               : "text-slate-700 hover:bg-neutral-100"
           }`}
         >
@@ -44,7 +44,7 @@ export default function DeliverySection({
           }}
           className={`rounded-lg px-2 py-2 text-sm font-semibold transition ${
             tipoEntrega === TIPOS_ENTREGA.retiro
-              ? "bg-[#21243d] text-white"
+              ? "bg-brand-selected"
               : "text-slate-700 hover:bg-neutral-100"
           }`}
         >
@@ -62,7 +62,7 @@ export default function DeliverySection({
           </div>
 
           <label className="block">
-            <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+            <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
               Calle
             </span>
             <input
@@ -89,7 +89,7 @@ export default function DeliverySection({
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+            <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
               Número / Altura
             </span>
             <input
@@ -118,7 +118,7 @@ export default function DeliverySection({
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+            <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
               Edificio / Casa (opcional)
             </span>
             <input
@@ -131,7 +131,7 @@ export default function DeliverySection({
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+            <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
               Piso / Depto (opcional)
             </span>
             <input
@@ -145,7 +145,7 @@ export default function DeliverySection({
 
           <label className="block">
             <div className="mb-1 flex items-baseline justify-between gap-2">
-              <span className="text-sm" style={{ color: "#21243d", fontWeight: 700 }}>
+              <span className="text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
                 Observaciones (envío)
               </span>
               <span className="shrink-0 text-xs text-slate-500">{obsEntrega.length}/150</span>

@@ -20,20 +20,19 @@ export default function Sidebar({ isOpen, onClose }) {
     onClose();
   };
 
+  const navItemClass =
+    "flex w-full items-center gap-3 px-4 py-2 text-[14px] font-semibold text-slate-800 transition hover:bg-[var(--brand-accent-soft)] active:scale-[0.99]";
+
   return (
     <>
       <aside
-        className={`absolute left-0 top-0 z-40 h-full w-64 bg-sky-50 shadow-xl will-change-transform transition-transform duration-[400ms] ease-out ${
+        className={`absolute left-0 top-0 z-40 h-full w-64 bg-white shadow-xl will-change-transform transition-transform duration-[400ms] ease-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-hidden={!isOpen}
       >
         <nav className="space-y-1.5 py-3">
-          <Link
-            href="/"
-            onClick={handleCloseAll}
-            className="flex w-full items-center gap-3 px-4 py-2 text-[14px] font-semibold text-slate-800 transition hover:bg-sky-100 active:scale-[0.99]"
-          >
+          <Link href="/" onClick={handleCloseAll} className={navItemClass}>
             <Home size={20} />
             <span>Inicio</span>
           </Link>
@@ -41,7 +40,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <button
             type="button"
             onClick={() => setShowInfoModal(true)}
-            className="flex w-full items-center gap-3 px-4 py-2 text-left text-[14px] font-semibold text-slate-800 transition hover:bg-sky-100 active:scale-[0.99]"
+            className={`${navItemClass} text-left`}
           >
             <Info size={20} />
             <span>Información</span>
@@ -50,7 +49,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <button
             type="button"
             onClick={() => setShowLocationModal(true)}
-            className="flex w-full items-center gap-3 px-4 py-2 text-left text-[14px] font-semibold text-slate-800 transition hover:bg-sky-100 active:scale-[0.99]"
+            className={`${navItemClass} text-left`}
           >
             <MapPin size={20} />
             <span>Ubicación</span>
@@ -61,7 +60,7 @@ export default function Sidebar({ isOpen, onClose }) {
             target="_blank"
             rel="noreferrer"
             onClick={handleCloseAll}
-            className="flex w-full items-center gap-3 px-4 py-2 text-[14px] font-semibold text-slate-800 transition hover:bg-sky-100 active:scale-[0.99]"
+            className={navItemClass}
           >
             <Instagram size={20} />
             <span>Instagram</span>
@@ -88,7 +87,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
             <div className="-mt-1 text-center">
               <div className="mb-1 flex justify-center">
-                <Info size={32} className="text-blue-900" />
+                <Info size={32} className="text-[var(--brand-primary)]" />
               </div>
               <h3 className="text-2xl font-medium text-slate-800">Información</h3>
             </div>
@@ -99,7 +98,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 href="https://wa.me/542302633818"
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm text-blue-600 transition-colors duration-200 hover:text-blue-400"
+                className="link-brand-accent text-sm underline"
               >
                 +54 2302 633818
               </a>
@@ -148,7 +147,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
             <div className="-mt-1 text-center">
               <div className="mb-1 flex justify-center">
-                <MapPin size={32} className="text-blue-900" />
+                <MapPin size={32} className="text-[var(--brand-primary)]" />
               </div>
               <h3 className="text-2xl font-medium text-slate-800">Ubicación</h3>
               <p className="mt-3 text-sm text-slate-500">{businessName}</p>
@@ -170,7 +169,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 href="https://maps.app.goo.gl/gZArjnYEQwvMxnAn6"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-blue-600 transition-colors duration-200 hover:text-blue-400"
+                className="link-brand-accent inline-flex items-center gap-1.5 text-sm underline"
               >
                 <ExternalLink size={14} />
                 <span>Abrir en Google Maps</span>
