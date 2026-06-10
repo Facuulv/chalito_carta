@@ -3,11 +3,17 @@ const DEFAULT_BRANDING = {
   logoUrl: null,
   colorPrimario: "#0D0D0D",
   colorSecundario: "#EA580C",
+  carousel: {
+    enabled: true,
+    slides: [],
+    updatedAt: null,
+  },
 };
 
-let cachedBranding = { ...DEFAULT_BRANDING };
+let cachedBranding = { ...DEFAULT_BRANDING, carousel: { ...DEFAULT_BRANDING.carousel } };
 let lastFetchAt = 0;
-const CACHE_MS = 5 * 60 * 1000;
+let lastCarouselVersion = null;
+const CACHE_MS = 45_000;
 
 function getApiBaseUrl() {
   const base =
@@ -24,8 +30,23 @@ function buildBrandingUrl() {
   return `${base}${path}`;
 }
 
+function normalizeCarousel(data) {
+  const carousel = data?.carousel || {};
+  return {
+    enabled: carousel.enabled !== false,
+    slides: Array.isArray(carousel.slides) ? carousel.slides : [],
+    updatedAt: carousel.updatedAt || null,
+  };
+}
+
 export function getCachedBranding() {
-  return { ...cachedBranding };
+  return {
+    ...cachedBranding,
+    carousel: {
+      ...cachedBranding.carousel,
+      slides: [...(cachedBranding.carousel?.slides || [])],
+    },
+  };
 }
 
 export async function fetchBranding({ force = false } = {}) {
@@ -36,7 +57,10 @@ export async function fetchBranding({ force = false } = {}) {
 
   const url = buildBrandingUrl();
   if (!url) {
-    cachedBranding = { ...DEFAULT_BRANDING };
+    cachedBranding = {
+      ...DEFAULT_BRANDING,
+      carousel: { ...DEFAULT_BRANDING.carousel },
+    };
     lastFetchAt = now;
     return getCachedBranding();
   }
@@ -57,13 +81,18 @@ export async function fetchBranding({ force = false } = {}) {
       throw new Error(data?.message || "Respuesta inválida");
     }
 
+    const carousel = normalizeCarousel(data);
+    const carouselVersion = carousel.updatedAt || String(carousel.slides.length);
+
     cachedBranding = {
       nombreNegocio: data.nombreNegocio || DEFAULT_BRANDING.nombreNegocio,
       logoUrl: data.logoUrl || null,
       colorPrimario: data.colorPrimario || DEFAULT_BRANDING.colorPrimario,
       colorSecundario: data.colorSecundario || DEFAULT_BRANDING.colorSecundario,
+      carousel,
     };
     lastFetchAt = now;
+    lastCarouselVersion = carouselVersion;
 
     if (typeof window !== "undefined") {
       try {
@@ -80,17 +109,29 @@ export async function fetchBranding({ force = false } = {}) {
       try {
         const stored = sessionStorage.getItem("carta_branding");
         if (stored) {
-          cachedBranding = { ...DEFAULT_BRANDING, ...JSON.parse(stored) };
+          const parsed = JSON.parse(stored);
+          cachedBranding = {
+            ...DEFAULT_BRANDING,
+            ...parsed,
+            carousel: normalizeCarousel(parsed),
+          };
           return getCachedBranding();
         }
       } catch (_) {
         /* noop */
       }
     }
-    cachedBranding = { ...DEFAULT_BRANDING };
+    cachedBranding = {
+      ...DEFAULT_BRANDING,
+      carousel: { ...DEFAULT_BRANDING.carousel },
+    };
     lastFetchAt = now;
     return getCachedBranding();
   }
+}
+
+export function getLastCarouselVersion() {
+  return lastCarouselVersion;
 }
 
 export function applyBrandingCssVars(branding = cachedBranding) {

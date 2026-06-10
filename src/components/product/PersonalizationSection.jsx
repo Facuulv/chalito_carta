@@ -100,12 +100,14 @@ export default function PersonalizationSection({
                 </span>
               </button>
               <p className="px-4 pb-3 text-sm text-slate-500">
-                Seleccioná las opciones que quieras.
+                Solo porción de papas clásicas. Otras variedades están en la categoría Papas.
               </p>
               {papasOpen && (
                 <div className="space-y-0 border-t border-neutral-200 bg-white/50 px-4 py-2">
                   {papasProductos.length === 0 ? (
-                    <p className="py-2 text-sm text-slate-500">Cargando...</p>
+                    <p className="py-2 text-sm text-slate-500">
+                      No hay porciones clásicas disponibles.
+                    </p>
                   ) : (
                     papasProductos.map((p) => {
                       const qty = papasSeleccionadas[p.id] ?? 0;

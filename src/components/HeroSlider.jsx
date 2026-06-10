@@ -140,21 +140,32 @@ export default function HeroSlider({ images = [] }) {
         onTouchStart={handleInteractionStart}
       >
         <div className="flex h-full">
-          {images.map((img, idx) => (
+          {images.map((img, idx) => {
+            const focalX = img.focalX ?? 50;
+            const focalY = img.focalY ?? 50;
+            const zoom = img.zoom ?? 1;
+
+            return (
             <div
-              key={img.src + idx}
-              className="min-w-0 flex-[0_0_100%]"
+              key={(img.src || img.url) + idx}
+              className="min-w-0 flex-[0_0_100%] h-full overflow-hidden"
             >
               <ImageWithFade
-                src={img.src}
+                src={img.src || img.url}
                 alt={img.alt}
                 width={400}
                 height={220}
                 className="h-full w-full object-cover"
+                style={{
+                  objectPosition: `${focalX}% ${focalY}%`,
+                  transform: `scale(${zoom})`,
+                  transformOrigin: `${focalX}% ${focalY}%`,
+                }}
                 draggable={false}
               />
             </div>
-          ))}
+          );
+          })}
         </div>
       </div>
 

@@ -27,6 +27,7 @@ import PresentationSelector from "@/components/product/PresentationSelector";
 import PersonalizationSection from "@/components/product/PersonalizationSection";
 import ProductObservaciones from "@/components/product/ProductObservaciones";
 import ProductAddToCartFooter from "@/components/product/ProductAddToCartFooter";
+import { filterPapasAcompanamiento } from "@/lib/papasAcompanamiento";
 
 export default function ProductoDetallePage() {
   const { slug } = useParams();
@@ -59,8 +60,13 @@ export default function ProductoDetallePage() {
     categoriaPapas,
   } = useProductCategoryFlags(producto, categorias);
 
-  const papasProductos = useCatalogStore((s) =>
+  const papasProductosRaw = useCatalogStore((s) =>
     selectProductsForCategory(s, categoriaPapas?.id ?? null)
+  );
+
+  const papasProductos = useMemo(
+    () => filterPapasAcompanamiento(papasProductosRaw),
+    [papasProductosRaw]
   );
 
   useEffect(() => {
@@ -255,7 +261,7 @@ export default function ProductoDetallePage() {
         >
           <ArrowLeft size={24} strokeWidth={2} />
         </button>
-        <h1 className="font-anton header-title-color min-w-0 flex-1 truncate text-left text-[22px] font-normal leading-[1.1em]">
+        <h1 className="font-anton header-title-color min-w-0 flex-1 truncate text-left text-[20px] font-normal leading-[1.1em]">
           {producto.nombre}
         </h1>
       </header>

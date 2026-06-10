@@ -100,7 +100,9 @@ body {
 }
 
 .font-anton {
-  font-family: var(--font-anton), Impact, sans-serif;
+  font-family: var(--font-bernier), Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .brand-navbar-gradient {
@@ -163,7 +165,9 @@ body {
 }
 
 .font-category-card {
-  font-family: var(--font-lato), Lato, Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-bernier), Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .font-mini-footer {

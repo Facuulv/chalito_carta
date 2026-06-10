@@ -17,20 +17,15 @@ import { getCategoryImageFromProducts } from "@/lib/categoryImages"
 import { lockBodyScroll, unlockBodyScroll } from "@/lib/scrollLock"
 import { useDelayedLoading } from "@/hooks/useDelayedLoading"
 import { useStoreStatus } from "@/hooks/useStoreStatus"
+import { useBranding } from "@/hooks/useBranding"
+import { resolveHeroImages } from "@/lib/heroDefaults"
 import HomeSkeleton from "@/components/skeletons/HomeSkeleton"
 import HeroSlider from "@/components/HeroSlider"
 import StoreClosedBanner from "@/components/StoreClosedBanner"
 import CategoryCard from "@/components/CategoryCard"
 
-const HERO_IMAGES = [
-  { src: "/hero-hamburguesa-cheeseburger.png", alt: "Hamburguesa Cheeseburger" },
-  { src: "/hero-lomo.png", alt: "Lomo" },
-  { src: "/hero-empanada-carne.png", alt: "Empanada de Carne" },
-  { src: "/hero-papas-tastycream.png", alt: "Papas Tastycream" },
-  { src: "/hero-vacio.png", alt: "Vacío" },
-]
-
 export default function HomePage() {
+  const { branding } = useBranding()
   const items = useCarritoStore(selectCartItems)
   const hasItems = items.length > 0
   const { isOpen, nextOpeningText } = useStoreStatus()
@@ -59,7 +54,10 @@ export default function HomePage() {
     return map
   }, [categorias, productos])
 
-  const heroImages = HERO_IMAGES
+  const heroImages = useMemo(
+    () => resolveHeroImages(branding?.carousel),
+    [branding?.carousel]
+  )
 
   const handleRetry = () => {
     useCatalogStore.getState().fetchCategories({ force: true })
@@ -103,7 +101,7 @@ export default function HomePage() {
 
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="relative z-0 -mt-2 shrink-0 bg-slate-200 px-4 pt-8 pb-16 md:px-6 lg:px-8">
-          <h2 className="font-anton header-title-color text-center text-2xl font-normal tracking-tight">
+          <h2 className="font-anton header-title-color text-center text-xl font-normal tracking-tight">
             Categorías
           </h2>
         </div>
