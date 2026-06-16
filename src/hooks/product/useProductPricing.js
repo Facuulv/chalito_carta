@@ -7,7 +7,7 @@ export function useProductPricing({
   papasSeleccionadas,
   papasProductos,
   todosAdicionales,
-  extrasSeleccionados,
+  extrasCantidades,
 }) {
   const precioSimple = Number(producto?.precio ?? 0);
   const precioDoble = presentacion.doble
@@ -52,11 +52,18 @@ export function useProductPricing({
     [papasSeleccionadas, papasProductos]
   );
 
-  const precioUnitario = useMemo(() => {
-    const extrasTotal = todosAdicionales
-      .filter((extra) => extrasSeleccionados.includes(extra.id))
-      .reduce((acc, extra) => acc + (extra.precio ?? extra.precioExtra ?? 0), 0);
+  const extrasTotal = useMemo(
+    () =>
+      Object.entries(extrasCantidades ?? {}).reduce((acc, [id, qty]) => {
+        const cantidad = Math.max(1, Number(qty) || 1);
+        const extra = todosAdicionales.find((e) => String(e.id) === String(id));
+        if (!extra) return acc;
+        return acc + Number(extra.precio ?? extra.precioExtra ?? 0) * cantidad;
+      }, 0),
+    [extrasCantidades, todosAdicionales]
+  );
 
+  const precioUnitario = useMemo(() => {
     const totalItems =
       (presentacionCantidades.simple ?? 0) +
       (presentacionCantidades.doble ?? 0) +
@@ -66,13 +73,7 @@ export function useProductPricing({
     return (
       totalPresentacion + (totalItems > 0 ? totalItems * extrasTotal : 0) + totalPapas
     );
-  }, [
-    totalPresentacion,
-    todosAdicionales,
-    extrasSeleccionados,
-    presentacionCantidades,
-    totalPapas,
-  ]);
+  }, [totalPresentacion, extrasTotal, presentacionCantidades, totalPapas]);
 
   return {
     precioSimple,

@@ -6,7 +6,7 @@ export function useAddToCartFromDetail({
   presentacionCantidades,
   presentacion,
   todosAdicionales,
-  extrasSeleccionados,
+  extrasCantidades,
   observaciones,
   categorias,
   papasSeleccionadas,
@@ -37,12 +37,14 @@ export function useAddToCartFromDetail({
       presentacion.triple?.id,
       presentacion.cuadruple?.id,
     ].filter(Boolean);
+
     const otrosExtras = todosAdicionales
-      .filter((e) => extrasSeleccionados.includes(e.id) && !presIds.includes(e.id))
+      .filter((e) => (extrasCantidades[e.id] ?? 0) > 0 && !presIds.includes(e.id))
       .map((e) => ({
         id: e.id,
         nombre: e.nombre ?? "",
         precioExtra: Number(e.precio ?? e.precio_extra ?? 0),
+        cantidad: extrasCantidades[e.id] ?? 1,
       }));
 
     if (presentacionCantidades.simple > 0) {
@@ -75,6 +77,7 @@ export function useAddToCartFromDetail({
             precioExtra: Number(
               presentacion.doble.precio ?? presentacion.doble.precioExtra ?? 0
             ),
+            cantidad: 1,
           },
         ],
         observaciones,
@@ -100,6 +103,7 @@ export function useAddToCartFromDetail({
             precioExtra: Number(
               presentacion.triple.precio ?? presentacion.triple.precioExtra ?? 0
             ),
+            cantidad: 1,
           },
         ],
         observaciones,
@@ -125,6 +129,7 @@ export function useAddToCartFromDetail({
             precioExtra: Number(
               presentacion.cuadruple.precio ?? presentacion.cuadruple.precioExtra ?? 0
             ),
+            cantidad: 1,
           },
         ],
         observaciones,

@@ -28,6 +28,7 @@ import PersonalizationSection from "@/components/product/PersonalizationSection"
 import ProductObservaciones from "@/components/product/ProductObservaciones";
 import ProductAddToCartFooter from "@/components/product/ProductAddToCartFooter";
 import { filterPapasAcompanamiento } from "@/lib/papasAcompanamiento";
+import { CANTIDAD_EXTRA_MAX } from "@/utils/cart/checkoutDisplay";
 
 export default function ProductoDetallePage() {
   const { slug } = useParams();
@@ -86,7 +87,7 @@ export default function ProductoDetallePage() {
     triple: 0,
     cuadruple: 0,
   });
-  const [extrasSeleccionados, setExtrasSeleccionados] = useState([]);
+  const [extrasCantidades, setExtrasCantidades] = useState({});
   const [extrasOpen, setExtrasOpen] = useState(false);
   const [papasOpen, setPapasOpen] = useState(false);
   const [papasSeleccionadas, setPapasSeleccionadas] = useState({});
@@ -95,7 +96,7 @@ export default function ProductoDetallePage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setPresentacionCantidades({ simple: 0, doble: 0, triple: 0, cuadruple: 0 });
-      setExtrasSeleccionados([]);
+      setExtrasCantidades({});
       setPapasSeleccionadas({});
       setObservaciones("");
     }, 0);
@@ -157,12 +158,36 @@ export default function ProductoDetallePage() {
     });
   };
 
-  const toggleExtra = (extraId) => {
-    setExtrasSeleccionados((prev) =>
-      prev.includes(extraId)
-        ? prev.filter((id) => id !== extraId)
-        : [...prev, extraId]
-    );
+  const toggleExtra = (extra) => {
+    setExtrasCantidades((prev) => {
+      const next = { ...prev };
+      if ((next[extra.id] ?? 0) > 0) {
+        delete next[extra.id];
+      } else {
+        next[extra.id] = 1;
+      }
+      return next;
+    });
+  };
+
+  const incrementarExtra = (extraId) => {
+    setExtrasCantidades((prev) => {
+      const actual = prev[extraId] ?? 0;
+      if (actual <= 0 || actual >= CANTIDAD_EXTRA_MAX) return prev;
+      return { ...prev, [extraId]: actual + 1 };
+    });
+  };
+
+  const decrementarExtra = (extraId) => {
+    setExtrasCantidades((prev) => {
+      const actual = prev[extraId] ?? 0;
+      if (actual <= 1) {
+        const next = { ...prev };
+        delete next[extraId];
+        return next;
+      }
+      return { ...prev, [extraId]: actual - 1 };
+    });
   };
 
   const setPapasCantidad = (papasProductId, delta) => {
@@ -184,7 +209,7 @@ export default function ProductoDetallePage() {
       papasSeleccionadas,
       papasProductos,
       todosAdicionales,
-      extrasSeleccionados,
+      extrasCantidades,
     });
 
   const handleAddToCart = useAddToCartFromDetail({
@@ -193,7 +218,7 @@ export default function ProductoDetallePage() {
     presentacionCantidades,
     presentacion,
     todosAdicionales,
-    extrasSeleccionados,
+    extrasCantidades,
     observaciones,
     categorias,
     papasSeleccionadas,
@@ -315,8 +340,10 @@ export default function ProductoDetallePage() {
                 extrasOpen={extrasOpen}
                 setExtrasOpen={setExtrasOpen}
                 extras={extras}
-                extrasSeleccionados={extrasSeleccionados}
+                extrasCantidades={extrasCantidades}
                 toggleExtra={toggleExtra}
+                incrementarExtra={incrementarExtra}
+                decrementarExtra={decrementarExtra}
                 categoriaPapas={categoriaPapas}
                 isPapas={isPapas}
                 papasOpen={papasOpen}

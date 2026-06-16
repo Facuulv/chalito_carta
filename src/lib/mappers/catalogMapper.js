@@ -59,5 +59,6 @@ export function mapExtra(raw) {
     id: raw.id,
     nombre: raw.nombre ?? "",
     precio: Number(raw.precio_extra ?? raw.precio) || 0,
+    permiteCantidad: Boolean(raw.permite_cantidad === 1 || raw.permite_cantidad === true),
   };
 }

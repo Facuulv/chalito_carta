@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { formatPrice } from "@/utils/format/price";
+import { formatExtraNombre, getExtraLineTotal } from "@/utils/cart/checkoutDisplay";
 
 export default function OrderSummaryFooter({
   resumenOpen,
@@ -51,8 +52,9 @@ export default function OrderSummaryFooter({
                       {item.extras.length > 0 && (
                         <ul className="mt-0.5 space-y-0.5 text-xs text-slate-600">
                           {item.extras.map((e) => (
-                            <li key={e.id}>
-                              + {e.nombre} {formatPrice(e.precioExtra ?? e.precio ?? 0)}
+                            <li key={`${e.id}-${e.cantidad ?? 1}`}>
+                              + {formatExtraNombre(e)}{" "}
+                              {formatPrice(getExtraLineTotal(e))}
                             </li>
                           ))}
                         </ul>

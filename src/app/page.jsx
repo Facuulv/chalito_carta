@@ -101,7 +101,7 @@ export default function HomePage() {
 
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="relative z-0 -mt-2 shrink-0 bg-slate-200 px-4 pt-8 pb-16 md:px-6 lg:px-8">
-          <h2 className="font-anton header-title-color text-center text-xl font-normal tracking-tight">
+          <h2 className="font-anton header-title-color text-center text-2xl font-normal tracking-tight">
             Categorías
           </h2>
         </div>

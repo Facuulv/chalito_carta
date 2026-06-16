@@ -1,4 +1,5 @@
 import { getItemQuantity } from "@/utils/cart/cartItem";
+import { mapExtrasToCheckoutPayload } from "@/utils/cart/checkoutDisplay";
 
 function buildCartaPublicaPath(suffixPath) {
   const baseURL =
@@ -18,8 +19,8 @@ export function mapCartItemsToCouponPayload(items = []) {
   return items.map((item) => ({
     productId: item.articuloId,
     quantity: getItemQuantity(item),
-    selectedExtras: (item.extrasSeleccionados ?? item.extras ?? []).map((e) =>
-      typeof e === "object" && e != null && "id" in e ? e.id : Number(e)
+    selectedExtras: mapExtrasToCheckoutPayload(
+      item.extrasSeleccionados ?? item.extras ?? []
     ),
     itemNotes: (item.observaciones ?? "").trim() || null,
   }));

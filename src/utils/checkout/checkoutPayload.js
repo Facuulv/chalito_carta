@@ -1,4 +1,5 @@
 import { getItemQuantity } from "@/utils/cart/cartItem";
+import { mapExtrasToCheckoutPayload } from "@/utils/cart/checkoutDisplay";
 
 function parseBackendNumber(value) {
   const parsed = Number(value);
@@ -42,8 +43,8 @@ export function buildCheckoutPayload({ normalized, items, couponCode }) {
     items: items.map((item) => ({
       productId: item.articuloId,
       quantity: getItemQuantity(item),
-      selectedExtras: (item.extrasSeleccionados ?? item.extras ?? []).map((e) =>
-        typeof e === "object" && e != null && "id" in e ? e.id : Number(e)
+      selectedExtras: mapExtrasToCheckoutPayload(
+        item.extrasSeleccionados ?? item.extras ?? []
       ),
       itemNotes: (item.observaciones ?? "").trim(),
     })),
@@ -79,12 +80,7 @@ export function buildMercadoPagoCheckoutPayload({ normalized, items, couponCode 
       articulo_id: item.articuloId,
       cantidad: getItemQuantity(item),
       observaciones: (item.observaciones ?? "").trim() || null,
-      extras: (item.extrasSeleccionados ?? item.extras ?? [])
-        .map((extra) =>
-          typeof extra === "object" && extra != null && "id" in extra ? Number(extra.id) : Number(extra)
-        )
-        .filter(Number.isFinite)
-        .map((id) => ({ id })),
+      extras: mapExtrasToCheckoutPayload(item.extrasSeleccionados ?? item.extras ?? []),
     })),
     ...(couponCode && { couponCode }),
   };

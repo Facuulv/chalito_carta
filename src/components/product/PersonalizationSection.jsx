@@ -2,13 +2,16 @@
 
 import { ChevronDown, Minus, Plus } from "lucide-react";
 import { formatPrice } from "@/utils/format/price";
+import { CANTIDAD_EXTRA_MAX } from "@/utils/cart/checkoutDisplay";
 
 export default function PersonalizationSection({
   extrasOpen,
   setExtrasOpen,
   extras,
-  extrasSeleccionados,
+  extrasCantidades,
   toggleExtra,
+  incrementarExtra,
+  decrementarExtra,
   categoriaPapas,
   isPapas,
   papasOpen,
@@ -47,27 +50,59 @@ export default function PersonalizationSection({
           {extrasOpen && extras.length > 0 && (
             <div className="space-y-0 border-t border-neutral-200 bg-white/50 px-4 py-2">
               {extras.map((extra) => {
-                const checked = extrasSeleccionados.includes(extra.id);
+                const qty = extrasCantidades[extra.id] ?? 0;
+                const checked = qty > 0;
+                const permiteCantidad = Boolean(extra.permiteCantidad);
+                const precioUnit = extra.precio ?? extra.precioExtra ?? 0;
+                const precioMostrado =
+                  permiteCantidad && checked ? precioUnit * qty : precioUnit;
+
                 return (
-                  <label
+                  <div
                     key={extra.id}
-                    className="flex cursor-pointer items-center justify-between py-2"
+                    className="flex items-center justify-between gap-2 py-2"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 flex-1 items-center gap-3">
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => toggleExtra(extra.id)}
-                        className="h-4 w-4 accent-[var(--brand-primary)]"
+                        onChange={() => toggleExtra(extra)}
+                        className="h-4 w-4 shrink-0 accent-[var(--brand-primary)]"
                       />
                       <span className="text-sm font-medium text-slate-800">
                         {extra.nombre}
                       </span>
                     </div>
-                    <span className="text-sm font-semibold text-slate-800">
-                      + {formatPrice(extra.precio ?? extra.precioExtra ?? 0)}
-                    </span>
-                  </label>
+                    <div className="flex shrink-0 items-center gap-1.5">
+                      {permiteCantidad && checked && (
+                        <div className="flex items-center gap-0.5">
+                          <button
+                            type="button"
+                            onClick={() => decrementarExtra(extra.id)}
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-300 bg-white text-slate-700"
+                            aria-label={`Menos ${extra.nombre}`}
+                          >
+                            <Minus size={14} strokeWidth={2.5} />
+                          </button>
+                          <span className="min-w-[1.5rem] shrink-0 text-center text-sm font-medium text-slate-800">
+                            {qty}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => incrementarExtra(extra.id)}
+                            disabled={qty >= CANTIDAD_EXTRA_MAX}
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-300 bg-white text-slate-700 disabled:opacity-40"
+                            aria-label={`Más ${extra.nombre}`}
+                          >
+                            <Plus size={14} strokeWidth={2.5} />
+                          </button>
+                        </div>
+                      )}
+                      <span className="min-w-[4.5rem] shrink-0 text-right text-sm font-semibold tabular-nums text-slate-800">
+                        + {formatPrice(precioMostrado)}
+                      </span>
+                    </div>
+                  </div>
                 );
               })}
             </div>
@@ -110,7 +145,7 @@ export default function PersonalizationSection({
                     </p>
                   ) : (
                     papasProductos.map((p) => {
-                      const qty = papasSeleccionadas[p.id] ?? 0;
+                      const papasQty = papasSeleccionadas[p.id] ?? 0;
                       return (
                         <div
                           key={p.id}
@@ -123,13 +158,13 @@ export default function PersonalizationSection({
                             <button
                               type="button"
                               onClick={() => setPapasCantidad(p.id, -1)}
-                              disabled={qty <= 0}
+                              disabled={papasQty <= 0}
                               className="flex h-7 w-7 shrink-0 items-center justify-center rounded border border-slate-300 bg-white text-slate-700 disabled:opacity-40"
                             >
                               <Minus size={14} strokeWidth={2.5} />
                             </button>
                             <span className="min-w-[1.5rem] shrink-0 text-center text-sm font-medium text-slate-800">
-                              {qty}
+                              {papasQty}
                             </span>
                             <button
                               type="button"

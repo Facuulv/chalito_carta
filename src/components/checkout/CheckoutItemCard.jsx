@@ -8,6 +8,7 @@ import { getItemName, getItemQuantity } from "@/utils/cart/cartItem";
 import {
   isHamburguesas,
   splitExtrasForHamburguesa,
+  formatExtraNombre,
 } from "@/utils/cart/checkoutDisplay";
 import { PLACEHOLDER_PRODUCT_CARD_IMG } from "@/constants/images";
 
@@ -98,7 +99,7 @@ export default function CheckoutItemCard({
               {hasExtras && (
                 <p className={hasPresentacion ? "mt-2" : ""}>
                   -<strong className="font-extrabold text-slate-900">EXTRAS:</strong>{" "}
-                  {otros.map((e) => e.nombre).join(", ")}.
+                  {otros.map((e) => formatExtraNombre(e)).join(", ")}.
                 </p>
               )}
               {hasObs && (

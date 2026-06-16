@@ -21,7 +21,7 @@ export default function CategoryCard({ categoria, imageUrl }) {
         />
       )}
       <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/45" />
-      <h3 className="relative z-10 text-center text-[21px] font-medium leading-tight drop-shadow-md">
+      <h3 className="relative z-10 text-center text-[24px] font-medium leading-tight drop-shadow-md">
         {categoria.nombre}
       </h3>
       <ChevronRight
