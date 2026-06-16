@@ -36,19 +36,14 @@ export async function getProductDetail(productId) {
 
 /**
  * Obtiene los adicionales (extras) de un artículo.
+ * Devuelve objetos crudos del backend; el mapeo a UI ocurre en useCatalogStore (mapExtra).
  * @param {number|string} productId
- * @returns {Promise<Array<{id: number, nombre: string, precio_extra: number, disponible: number}>>}
+ * @returns {Promise<Array>}
  */
 export async function getExtrasByProduct(productId) {
   const { data } = await apiClient.get(`/articulos/${productId}/adicionales`);
   const raw = data?.data ?? data ?? [];
-  return raw
-    .filter((a) => a.disponible !== 0)
-    .map((a) => ({
-      id: a.id,
-      nombre: a.nombre,
-      precio: Number(a.precio_extra) || 0,
-    }));
+  return raw.filter((a) => a.disponible !== 0);
 }
 
 /**

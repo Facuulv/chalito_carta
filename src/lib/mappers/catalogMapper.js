@@ -55,10 +55,15 @@ export function mapProductDetail(raw, extras = []) {
 
 export function mapExtra(raw) {
   if (!raw || typeof raw !== "object") return null;
+  const permiteCantidad =
+    raw.permiteCantidad === true ||
+    raw.permite_cantidad === true ||
+    raw.permite_cantidad === 1 ||
+    raw.permite_cantidad === "1";
   return {
     id: raw.id,
     nombre: raw.nombre ?? "",
     precio: Number(raw.precio_extra ?? raw.precio) || 0,
-    permiteCantidad: Boolean(raw.permite_cantidad === 1 || raw.permite_cantidad === true),
+    permiteCantidad: Boolean(permiteCantidad),
   };
 }
