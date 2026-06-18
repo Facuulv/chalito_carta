@@ -134,6 +134,36 @@ export async function obtenerEstadoSesionMp(sessionId) {
 }
 
 /**
+ * Reconciliación activa de sesión MP contra API de pagos.
+ * POST .../carta-publica/checkout/sesion/:sessionId/reconciliar
+ */
+export async function reconciliarSesionMp(sessionId) {
+  const sid = String(sessionId || "").trim();
+  if (!sid) {
+    throw new Error("Falta el identificador de sesión.");
+  }
+  const url = buildCartaPublicaPath(`/checkout/sesion/${encodeURIComponent(sid)}/reconciliar`);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const msg =
+      data?.message ??
+      data?.error ??
+      data?.mensaje ??
+      "No pudimos reconciliar el estado del pago.";
+    throw new Error(msg);
+  }
+
+  return data;
+}
+
+/**
  * Consulta estado real de pago/pedido para una orden.
  * GET {BASE_URL}/api/carta-publica/pedidos/:pedidoId/estado-pago
  */

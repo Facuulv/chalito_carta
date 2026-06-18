@@ -14,6 +14,7 @@ import {
 import {
   obtenerEstadoPagoPedido,
   obtenerEstadoSesionMp,
+  reconciliarSesionMp,
 } from "@/services/pedidosPublicosService";
 import { formatPrice } from "@/utils/format/price";
 import { resetClientStateAfterApprovedPayment } from "@/utils/checkout/resetAfterApprovedPayment";
@@ -61,6 +62,17 @@ function isAbandonedCheckout(resultadoMp, parsed) {
   if (hasMpPaymentActivity(parsed)) return false;
   if (resultadoMp === "failure") return true;
   if (resultadoMp === "pending") return true;
+  return false;
+}
+
+function shouldIntentarReconciliacion(resultadoMp, parsed) {
+  if (!parsed) return false;
+  if (parsed.pedidoId) return false;
+  if (resultadoMp === "success") return true;
+  const estadoSesion = String(parsed?.estadoSesion ?? "").trim().toUpperCase();
+  const estadoPago = String(parsed?.estadoPago ?? "").trim().toUpperCase();
+  if (estadoSesion === "CANCELADO" && estadoPago !== "PAGADO") return true;
+  if (estadoPago === "RECHAZADO" && hasMpPaymentActivity(parsed)) return true;
   return false;
 }
 
@@ -218,7 +230,7 @@ function CheckoutResultadoContent() {
   }, []);
 
   const fetchStatus = useCallback(
-    async ({ attempt = 0, withLoading = true } = {}) => {
+    async ({ attempt = 0, withLoading = true, forceReconcile = false } = {}) => {
       if (!useSessionFlow && !pedidoIdFromUrl) {
         stopPolling();
         setUiState(UI_STATES.error);
@@ -238,7 +250,20 @@ function CheckoutResultadoContent() {
         const response = useSessionFlow
           ? await obtenerEstadoSesionMp(sessionIdFromUrl)
           : await obtenerEstadoPagoPedido(pedidoIdFromUrl);
-        const parsed = parseEstadoPayload(response, useSessionFlow ? "session" : "pedido");
+        let parsed = parseEstadoPayload(response, useSessionFlow ? "session" : "pedido");
+
+        if (useSessionFlow && (forceReconcile || shouldIntentarReconciliacion(resultadoMp, parsed))) {
+          try {
+            const recon = await reconciliarSesionMp(sessionIdFromUrl);
+            const estadoReconciliado = recon?.data?.estado;
+            if (estadoReconciliado) {
+              parsed = parseEstadoPayload({ data: estadoReconciliado }, "session");
+            }
+          } catch (reconcileError) {
+            console.warn("[checkout/resultado] Reconciliación MP:", reconcileError?.message);
+          }
+        }
+
         const nextUiState = resolveUiState(parsed.estadoPago);
         setData(parsed);
         setUiState(nextUiState);
@@ -405,7 +430,7 @@ function CheckoutResultadoContent() {
             {showRefreshStatus && (
               <button
                 type="button"
-                onClick={() => fetchStatus({ attempt: 0, withLoading: true })}
+                onClick={() => fetchStatus({ attempt: 0, withLoading: true, forceReconcile: useSessionFlow })}
                 className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
               >
                 <RefreshCcw size={16} />
