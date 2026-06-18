@@ -228,3 +228,18 @@ body {
   text-overflow: ellipsis;
   text-transform: uppercase;
 }
+
+.product-list-description {
+  font-family: var(--font-lato), Lato, "sans-serif", Roboto, RobotoFallback, Helvetica, Arial, sans-serif;
+  color: #475569;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.35;
+  margin: 0.25rem 0 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: break-spaces;
+}

@@ -286,7 +286,7 @@ export default function ProductoDetallePage() {
         >
           <ArrowLeft size={24} strokeWidth={2} />
         </button>
-        <h1 className="font-anton header-title-color min-w-0 flex-1 truncate text-left text-[20px] font-normal leading-[1.1em]">
+        <h1 className="font-anton header-title-color min-w-0 flex-1 truncate text-left text-[24px] font-normal leading-[1.1em]">
           {producto.nombre}
         </h1>
       </header>

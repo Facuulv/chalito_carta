@@ -18,14 +18,19 @@ export default function ProductListItemCard({ producto }) {
         width={88}
         height={88}
         loading="lazy"
-        className="h-[5.5rem] w-[5.5rem] shrink-0 object-cover"
+        className="min-h-[5.5rem] w-[5.5rem] shrink-0 self-stretch object-cover"
         onError={(e) => {
           e.target.src = PLACEHOLDER_PRODUCT_CARD_IMG;
         }}
       />
       <div className="flex min-h-[5.5rem] flex-1 flex-col justify-between px-3 pt-3 pb-1.5">
-        <h2 className="product-name">{producto.nombre}</h2>
-        <p className="font-mini-footer mt-auto ml-1 text-primary">
+        <div className="min-w-0">
+          <h2 className="product-name">{producto.nombre}</h2>
+          {producto.descripcion && (
+            <p className="product-list-description">{producto.descripcion}</p>
+          )}
+        </div>
+        <p className="font-mini-footer mt-2 ml-1 text-primary">
           <span className="text-[15px] font-light whitespace-nowrap">Desde </span>
           <span className="product-price ml-1.5 text-[20px] whitespace-nowrap">
             {formatPrice(producto.precio)}
