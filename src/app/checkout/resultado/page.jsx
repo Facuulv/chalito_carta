@@ -18,6 +18,7 @@ import {
 } from "@/services/pedidosPublicosService";
 import { formatPrice } from "@/utils/format/price";
 import { resetClientStateAfterApprovedPayment } from "@/utils/checkout/resetAfterApprovedPayment";
+import WhatsAppPedidoButton from "@/components/checkout/WhatsAppPedidoButton";
 
 const POLL_INTERVAL_MS = 3500;
 const MAX_POLL_ATTEMPTS = 5;
@@ -415,6 +416,12 @@ function CheckoutResultadoContent() {
                   </strong>
                 </div>
               )}
+            </section>
+          )}
+
+          {displayContext === DISPLAY_CONTEXT.approved && displayPedidoId != null && (
+            <section className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4">
+              <WhatsAppPedidoButton pedidoId={displayPedidoId} />
             </section>
           )}
 

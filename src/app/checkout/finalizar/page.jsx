@@ -19,6 +19,7 @@ import ScheduleSection from "@/components/checkout/finalizar/ScheduleSection";
 import PaymentSection from "@/components/checkout/finalizar/PaymentSection";
 import CouponSection from "@/components/checkout/finalizar/CouponSection";
 import OrderSummaryFooter from "@/components/checkout/finalizar/OrderSummaryFooter";
+import WhatsAppPedidoButton from "@/components/checkout/WhatsAppPedidoButton";
 import { useCheckoutSubmit } from "@/hooks/checkout/useCheckoutSubmit";
 import { guardarDatos, usarDatosPrevios } from "@/hooks/checkout/useCheckoutPersistence";
 
@@ -189,6 +190,7 @@ export default function CheckoutFinalizarPage() {
             <p className="text-lg font-bold text-green-800">Pedido enviado</p>
             <p className="mt-1 text-sm text-green-700">Número #{pedidoCreado.id}</p>
             <p className="mt-0.5 text-sm text-green-700">Estado: {pedidoCreado.estado}</p>
+            <WhatsAppPedidoButton pedidoId={pedidoCreado.id} />
             <button
               type="button"
               onClick={() => router.push("/")}
