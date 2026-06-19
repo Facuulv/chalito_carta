@@ -55,6 +55,7 @@ export default function CheckoutFinalizarPage() {
     }
   });
   const [numeroAltura, setNumeroAltura] = useState("");
+  const [entreCalles, setEntreCalles] = useState("");
   const [edificioCasa, setEdificioCasa] = useState("");
   const [pisoDepto, setPisoDepto] = useState("");
   const [obsEntrega, setObsEntrega] = useState("");
@@ -91,8 +92,9 @@ export default function CheckoutFinalizarPage() {
       numeroAltura,
       edificioCasa,
       pisoDepto,
+      entreCalles,
     });
-  }, [pedidoCreado, nombre, telefono, email, calle, numeroAltura, edificioCasa, pisoDepto]);
+  }, [pedidoCreado, nombre, telefono, email, calle, numeroAltura, edificioCasa, pisoDepto, entreCalles]);
 
   useEffect(() => {
     if (metodoPago === "efectivo") {
@@ -174,6 +176,7 @@ export default function CheckoutFinalizarPage() {
       horarioProgramado: horaProgramada,
       calle,
       numeroAltura,
+      entreCalles,
       edificioCasa,
       pisoDepto,
       obsEntrega,
@@ -194,7 +197,7 @@ export default function CheckoutFinalizarPage() {
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="btn-brand-secondary mt-6 inline-block rounded-xl px-6 py-2.5 text-sm font-semibold"
+              className="btn-brand-secondary mt-4 inline-flex h-12 w-full items-center justify-center rounded-xl px-6 text-sm font-semibold"
             >
               Volver al inicio
             </button>
@@ -263,6 +266,7 @@ export default function CheckoutFinalizarPage() {
                     setEmail(datosPrevios.email || "");
                     setCalle(datosPrevios.calle || "");
                     setNumeroAltura(datosPrevios.numeroAltura || "");
+                    setEntreCalles(datosPrevios.entreCalles || "");
                     setEdificioCasa(datosPrevios.edificioCasa || "");
                     setPisoDepto(datosPrevios.pisoDepto || "");
                     setDatosPrevios(null);
@@ -309,6 +313,7 @@ export default function CheckoutFinalizarPage() {
                 const next = { ...prev };
                 delete next.calle;
                 delete next.numeroAltura;
+                delete next.entreCalles;
                 delete next.obsEntrega;
                 return next;
               })
@@ -317,6 +322,8 @@ export default function CheckoutFinalizarPage() {
             setCalle={setCalle}
             numeroAltura={numeroAltura}
             setNumeroAltura={setNumeroAltura}
+            entreCalles={entreCalles}
+            setEntreCalles={setEntreCalles}
             edificioCasa={edificioCasa}
             setEdificioCasa={setEdificioCasa}
             pisoDepto={pisoDepto}

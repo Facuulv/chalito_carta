@@ -6,6 +6,7 @@ const DEFAULT_DATA = {
   email: '',
   calle: '',
   numeroAltura: '',
+  entreCalles: '',
   edificioCasa: '',
   pisoDepto: '',
 };

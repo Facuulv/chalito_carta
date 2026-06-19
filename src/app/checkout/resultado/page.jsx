@@ -396,15 +396,15 @@ function CheckoutResultadoContent() {
 
           {displayContext === DISPLAY_CONTEXT.approved && displayPedidoId != null && (
             <section className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4">
-              <WhatsAppPedidoButton pedidoId={displayPedidoId} />
+              <WhatsAppPedidoButton pedidoId={displayPedidoId} autoOpen />
             </section>
           )}
 
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-5 flex flex-col gap-3">
             {showRetryPayment && (
               <Link
                 href="/checkout/finalizar"
-                className="btn-brand-secondary flex h-11 flex-1 items-center justify-center rounded-md px-3 text-sm font-semibold"
+                className="btn-brand-secondary flex h-12 w-full items-center justify-center rounded-xl px-3 text-sm font-semibold"
               >
                 Reintentar pago
               </Link>
@@ -413,7 +413,7 @@ function CheckoutResultadoContent() {
               <button
                 type="button"
                 onClick={() => fetchStatus({ attempt: 0, withLoading: true })}
-                className="flex h-11 flex-1 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
               >
                 <RefreshCcw size={16} />
                 Consultar de nuevo
@@ -421,10 +421,10 @@ function CheckoutResultadoContent() {
             )}
             <Link
               href="/"
-              className={`flex h-11 items-center justify-center rounded-md px-3 text-sm font-semibold transition ${
+              className={`flex h-12 w-full items-center justify-center rounded-xl px-3 text-sm font-semibold transition ${
                 showRetryPayment || showRefreshStatus
-                  ? "flex-1 border border-neutral-300 bg-white text-[var(--text-primary)] hover:bg-neutral-50"
-                  : "btn-brand-secondary flex-1"
+                  ? "border border-neutral-300 bg-white text-[var(--text-primary)] hover:bg-neutral-50"
+                  : "btn-brand-secondary"
               }`}
             >
               Volver al inicio

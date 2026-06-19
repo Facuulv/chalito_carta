@@ -3,10 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { obtenerWhatsAppClientePedido } from "@/services/checkoutWhatsAppService";
+import {
+  markWhatsAppAutoOpened,
+  shouldAutoOpenWhatsApp,
+} from "@/utils/checkout/whatsappAutoOpenGuard";
 
 /**
  * Botón para enviar el pedido al local por WhatsApp.
- * Intenta abrir WhatsApp una vez si está activo, pero el botón siempre queda visible.
+ * Intenta abrir WhatsApp una vez si está activo; el botón queda como fallback.
  * Si falla la carga o el flag está off, no muestra nada (el pedido ya fue creado).
  */
 export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
@@ -48,14 +52,17 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   useEffect(() => {
     if (!autoOpen || !waData?.activo || !waData?.urlWaMe) return;
     if (autoOpenAttemptedRef.current) return;
+    if (!shouldAutoOpenWhatsApp(pedidoId)) return;
+
     autoOpenAttemptedRef.current = true;
+    markWhatsAppAutoOpened(pedidoId);
 
     try {
       window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
     } catch (_) {
       /* El botón sigue disponible como fallback */
     }
-  }, [autoOpen, waData]);
+  }, [autoOpen, waData, pedidoId]);
 
   const handleClick = useCallback(() => {
     if (!waData?.urlWaMe) return;
@@ -74,7 +81,7 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#1ebe57]"
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm font-semibold text-white transition hover:bg-[#1ebe57]"
       >
         <FaWhatsapp className="text-lg" aria-hidden />
         Enviar pedido por WhatsApp
