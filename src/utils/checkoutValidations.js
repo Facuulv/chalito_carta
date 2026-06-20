@@ -24,15 +24,36 @@ export function isValidName(name) {
   return NAME_REGEX.test(n);
 }
 
-/** Normaliza teléfono: permite +, -, espacios, () */
-export function normalizePhone(phone) {
-  if (phone == null || typeof phone !== "string") return "";
-  return phone.trim();
+/** Normaliza teléfono argentino a dígitos E.164 (549...) */
+export function normalizePhoneDigits(phone) {
+  let digits = String(phone ?? "").replace(/\D/g, "");
+  if (!digits) return "";
+
+  if (digits.startsWith("00")) {
+    digits = digits.slice(2);
+  }
+  if (digits.startsWith("549") && digits.length >= 12) return digits;
+  if (digits.startsWith("54") && digits.length >= 11) return `549${digits.slice(2)}`;
+  if (digits.startsWith("9") && digits.length >= 11) return `54${digits}`;
+  if (digits.startsWith("0") && digits.length >= 10) return `549${digits.slice(1)}`;
+  if (digits.length === 10) return `549${digits}`;
+
+  return digits;
 }
 
-/** Valida teléfono: 8-15 dígitos */
+/** Normaliza teléfono: trim + dígitos E.164 AR cuando aplica */
+export function normalizePhone(phone) {
+  if (phone == null || typeof phone !== "string") return "";
+  const trimmed = phone.trim();
+  if (!trimmed) return "";
+  return normalizePhoneDigits(trimmed) || trimmed;
+}
+
+/** Valida teléfono: 13 dígitos móvil AR (549...) o 10-15 dígitos internacionales */
 export function isValidPhone(phone) {
-  const digits = (phone ?? "").replace(/\D/g, "");
+  const digits = normalizePhoneDigits(phone);
+  if (!digits) return false;
+  if (digits.startsWith("549")) return digits.length === 13;
   return digits.length >= 8 && digits.length <= 15;
 }
 
