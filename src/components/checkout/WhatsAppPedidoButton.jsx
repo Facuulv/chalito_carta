@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { obtenerWhatsAppClientePedido } from "@/services/checkoutWhatsAppService";
+import {
+  markWhatsAppAutoOpened,
+  shouldAutoOpenWhatsApp,
+} from "@/utils/checkout/whatsappAutoOpenGuard";
 
-/**
- * Botón para enviar el pedido al local por WhatsApp.
- * Intenta abrir WhatsApp una vez si está activo, pero el botón siempre queda visible.
- * Si falla la carga o el flag está off, no muestra nada (el pedido ya fue creado).
- */
 export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   const [waData, setWaData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -17,12 +16,14 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   useEffect(() => {
     let cancelled = false;
     const id = Number(pedidoId);
+
     if (!Number.isFinite(id) || id <= 0) {
       setLoading(false);
       return undefined;
     }
 
     setLoading(true);
+
     obtenerWhatsAppClientePedido(id)
       .then((data) => {
         if (!cancelled) {
@@ -48,18 +49,26 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   useEffect(() => {
     if (!autoOpen || !waData?.activo || !waData?.urlWaMe) return;
     if (autoOpenAttemptedRef.current) return;
+    if (!shouldAutoOpenWhatsApp(pedidoId)) return;
+
     autoOpenAttemptedRef.current = true;
+    markWhatsAppAutoOpened(pedidoId);
 
     try {
       window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
     } catch (_) {
-      /* El botón sigue disponible como fallback */
+      // El botón sigue disponible como fallback.
     }
-  }, [autoOpen, waData]);
+  }, [autoOpen, waData, pedidoId]);
 
   const handleClick = useCallback(() => {
     if (!waData?.urlWaMe) return;
-    window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
+
+    try {
+      window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
+    } catch (_) {
+      // No romper la pantalla si el navegador bloquea la apertura.
+    }
   }, [waData]);
 
   if (loading || !waData?.activo || !waData?.urlWaMe) {
@@ -71,10 +80,11 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
       <p className="text-sm text-green-700">
         Podés enviar el resumen de tu pedido al local por WhatsApp.
       </p>
+
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#1ebe57]"
+        className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm font-semibold text-white transition hover:bg-[#1ebe57]"
       >
         <FaWhatsapp className="text-lg" aria-hidden />
         Enviar pedido por WhatsApp

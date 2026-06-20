@@ -148,6 +148,7 @@ export function validateCheckoutForm(formState, cartTotal) {
     calle = "",
     altura = "",
     numeroAltura = "",
+    entreCalles = "",
     edificioCasa = "",
     pisoDepto = "",
     obsEntrega = "",
@@ -206,6 +207,10 @@ export function validateCheckoutForm(formState, cartTotal) {
     if (!alturaVal) {
       errors.numeroAltura = "Ingresá número/altura.";
     }
+    const entreCallesVal = (entreCalles ?? "").trim();
+    if (!entreCallesVal || entreCallesVal.length < 2) {
+      errors.entreCalles = "Indicá entre qué calles se encuentra el domicilio.";
+    }
     if (obs.length > 200) {
       errors.obsEntrega = "Máximo 200 caracteres.";
     }
@@ -227,17 +232,34 @@ export function validateCheckoutForm(formState, cartTotal) {
     }
   }
 
+  const calleTrim = (calle ?? "").trim();
+  const alturaNorm = normalizeAltura(altura || numeroAltura);
+  const entreCallesTrim = (entreCalles ?? "").trim();
+  const edificioTrim = (edificioCasa ?? "").trim();
+  const pisoTrim = (pisoDepto ?? "").trim();
+
+  let address;
+  if (isDelivery) {
+    address = [
+      `Calle: ${calleTrim}`,
+      `Altura: ${alturaNorm}`,
+      `Entre calles: ${entreCallesTrim}`,
+      edificioTrim ? `Edificio/Casa: ${edificioTrim}` : null,
+      pisoTrim ? `Piso/Depto: ${pisoTrim}` : null,
+    ]
+      .filter(Boolean)
+      .join(" | ");
+    if (address.length > 255) {
+      errors.address = "La dirección es demasiado larga. Acortá algún campo.";
+    }
+  }
+
   const firstErrorKey = Object.keys(errors)[0];
   let firstError = firstErrorKey ? errors[firstErrorKey] : null;
-  if (firstErrorKey === "calle" || firstErrorKey === "numeroAltura") {
+  if (firstErrorKey === "calle" || firstErrorKey === "numeroAltura" || firstErrorKey === "entreCalles") {
     firstError = "Completá la dirección de entrega.";
   }
   // horarioProgramado usa el mensaje específico de validateScheduledTime (vacío o < 10 min)
-
-  const calleTrim = (calle ?? "").trim();
-  const alturaNorm = normalizeAltura(altura || numeroAltura);
-  const edificioTrim = (edificioCasa ?? "").trim();
-  const pisoTrim = (pisoDepto ?? "").trim();
 
   const normalized = {
     nombre: normalizeName(nombre),
@@ -246,16 +268,7 @@ export function validateCheckoutForm(formState, cartTotal) {
     deliveryType: isDelivery ? "DELIVERY" : "RETIRO",
     cuando: isHoraProgramada ? "HORA_PROGRAMADA" : "CUANTO_ANTES",
     horarioProgramado: isHoraProgramada ? timeVal : undefined,
-    address: isDelivery
-      ? [
-          `Calle: ${calleTrim}`,
-          `Altura: ${alturaNorm}`,
-          edificioTrim ? `Edificio/Casa: ${edificioTrim}` : null,
-          pisoTrim ? `Piso/Depto: ${pisoTrim}` : null,
-        ]
-          .filter(Boolean)
-          .join(" | ")
-      : undefined,
+    address: isDelivery ? address : undefined,
     notes: isDelivery ? obs.slice(0, 200) || undefined : undefined,
     paymentMethod: (metodoPago ?? paymentMethod ?? "").toUpperCase(),
     efectivoConCuanto: isEfectivo ? parseMoneyNumber(efectivo) : undefined,

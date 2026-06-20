@@ -9,6 +9,8 @@ export default function DeliverySection({
   setCalle,
   numeroAltura,
   setNumeroAltura,
+  entreCalles,
+  setEntreCalles,
   edificioCasa,
   setEdificioCasa,
   pisoDepto,
@@ -76,7 +78,7 @@ export default function DeliverySection({
                 setCalle(cleaned);
                 clearFieldError("calle");
               }}
-              placeholder="Ej: Av. Corrientes"
+              placeholder="Ej: Calle 20"
               className={`h-11 w-full rounded-sm border-0 bg-[#f8f8f8] px-3 text-sm text-slate-800 placeholder:text-slate-400/60 outline-none focus:ring-1 ${
                 fieldErrors.calle
                   ? "ring-2 ring-red-500 focus:ring-red-500"
@@ -114,6 +116,30 @@ export default function DeliverySection({
             />
             {fieldErrors.numeroAltura && (
               <p className="mt-0.5 text-xs text-red-600">{fieldErrors.numeroAltura}</p>
+            )}
+          </label>
+
+          <label className="block">
+            <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>
+              Entre calles
+            </span>
+            <input
+              id="checkout-entreCalles"
+              type="text"
+              value={entreCalles}
+              onChange={(e) => {
+                setEntreCalles(e.target.value);
+                clearFieldError("entreCalles");
+              }}
+              placeholder="Ej: 5 y 7"
+              className={`h-11 w-full rounded-sm border-0 bg-[#f8f8f8] px-3 text-sm text-slate-800 placeholder:text-slate-400/60 outline-none focus:ring-1 ${
+                fieldErrors.entreCalles
+                  ? "ring-2 ring-red-500 focus:ring-red-500"
+                  : "focus:ring-neutral-300/40"
+              }`}
+            />
+            {fieldErrors.entreCalles && (
+              <p className="mt-0.5 text-xs text-red-600">{fieldErrors.entreCalles}</p>
             )}
           </label>
 
