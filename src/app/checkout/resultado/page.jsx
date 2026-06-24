@@ -132,6 +132,8 @@ function buildStatusContent(displayContext) {
         title: "Pago rechazado",
         message:
           "Mercado Pago no pudo aprobar el pago. Probá de nuevo u otro medio de pago.",
+        warning:
+          "Si ves un movimiento en tu cuenta de Mercado Pago, no te preocupes. Los pagos rechazados se revierten automáticamente en 1 a 3 días hábiles.",
       };
     case DISPLAY_CONTEXT.unconfirmed:
       return {
@@ -370,6 +372,12 @@ function CheckoutResultadoContent() {
             </div>
 
             <p className="mt-2 text-sm text-slate-700">{statusContent.message}</p>
+
+            {statusContent.warning && (
+              <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                {statusContent.warning}
+              </p>
+            )}
 
             {displayContext === DISPLAY_CONTEXT.abandoned && (
               <p className="mt-2 text-sm text-slate-600">

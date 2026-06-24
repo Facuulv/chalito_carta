@@ -19,9 +19,8 @@ import ScheduleSection from "@/components/checkout/finalizar/ScheduleSection";
 import PaymentSection from "@/components/checkout/finalizar/PaymentSection";
 import CouponSection from "@/components/checkout/finalizar/CouponSection";
 import OrderSummaryFooter from "@/components/checkout/finalizar/OrderSummaryFooter";
-import WhatsAppPedidoButton from "@/components/checkout/WhatsAppPedidoButton";
 import { useCheckoutSubmit } from "@/hooks/checkout/useCheckoutSubmit";
-import { guardarDatos, usarDatosPrevios } from "@/hooks/checkout/useCheckoutPersistence";
+import { usarDatosPrevios } from "@/hooks/checkout/useCheckoutPersistence";
 
 const TIPOS_ENTREGA = {
   envio: "envio",
@@ -64,7 +63,6 @@ export default function CheckoutFinalizarPage() {
   const [tipoDemora, setTipoDemora] = useState(TIPOS_DEMORA.cuantoAntes);
   const [horaProgramada, setHoraProgramada] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [pedidoCreado, setPedidoCreado] = useState(null);
   const [fieldErrors, setFieldErrors] = useState({});
   const [resumenOpen, setResumenOpen] = useState(false);
   const [datosPrevios, setDatosPrevios] = useState(null);
@@ -81,20 +79,6 @@ export default function CheckoutFinalizarPage() {
   useEffect(() => {
     setDatosPrevios(usarDatosPrevios());
   }, []);
-
-  useEffect(() => {
-    if (!pedidoCreado) return;
-    guardarDatos({
-      nombre,
-      telefono,
-      email,
-      calle,
-      numeroAltura,
-      edificioCasa,
-      pisoDepto,
-      entreCalles,
-    });
-  }, [pedidoCreado, nombre, telefono, email, calle, numeroAltura, edificioCasa, pisoDepto, entreCalles]);
 
   useEffect(() => {
     if (metodoPago === "efectivo") {
@@ -119,10 +103,10 @@ export default function CheckoutFinalizarPage() {
 
   // Toast si carrito vacío al entrar a finalizar (no al limpiar tras éxito)
   useEffect(() => {
-    if (items.length === 0 && !pedidoCreado) {
+    if (items.length === 0) {
       toast.error("Tu carrito está vacío.");
     }
-  }, [items.length, pedidoCreado]);
+  }, [items.length]);
 
   // Migración: limpiar keys legacy una vez inicializado el estado
   useEffect(() => {
@@ -165,8 +149,8 @@ export default function CheckoutFinalizarPage() {
     montoEfectivoInputRef,
     setFieldErrors,
     setIsSubmitting,
-    setPedidoCreado,
     clearCart,
+    router,
     formValues: {
       nombre,
       telefono,
@@ -184,28 +168,6 @@ export default function CheckoutFinalizarPage() {
       montoEfectivo,
     },
   });
-
-  if (pedidoCreado) {
-    return (
-      <div className="flex h-full min-h-0 w-full flex-col overflow-hidden bg-neutral-100">
-        <div className="app-scroll-y flex min-h-0 flex-1 flex-col px-4 py-6">
-          <div className="mx-auto w-full max-w-[480px] rounded-xl border border-green-200 bg-green-50 px-4 py-8 text-center md:max-w-3xl">
-            <p className="text-lg font-bold text-green-800">Pedido enviado</p>
-            <p className="mt-1 text-sm text-green-700">Número #{pedidoCreado.id}</p>
-            <p className="mt-0.5 text-sm text-green-700">Estado: {pedidoCreado.estado}</p>
-            <WhatsAppPedidoButton pedidoId={pedidoCreado.id} />
-            <button
-              type="button"
-              onClick={() => router.push("/")}
-              className="btn-brand-secondary mt-4 inline-flex h-12 w-full items-center justify-center rounded-xl px-6 text-sm font-semibold"
-            >
-              Volver al inicio
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (items.length === 0) {
     return (
@@ -308,6 +270,7 @@ export default function CheckoutFinalizarPage() {
             tipoEntrega={tipoEntrega}
             TIPOS_ENTREGA={TIPOS_ENTREGA}
             setTipoEntrega={setTipoEntrega}
+            total={checkoutTotal}
             clearDeliveryErrorsForRetiro={() =>
               setFieldErrors((prev) => {
                 const next = { ...prev };

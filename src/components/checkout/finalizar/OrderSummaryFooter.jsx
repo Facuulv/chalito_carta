@@ -3,6 +3,7 @@
 import { ChevronDown } from "lucide-react";
 import { formatPrice } from "@/utils/format/price";
 import { formatExtraNombre, getExtraLineTotal } from "@/utils/cart/checkoutDisplay";
+import { useEnvioGratis } from "@/hooks/useEnvioGratis";
 
 export default function OrderSummaryFooter({
   resumenOpen,
@@ -17,6 +18,8 @@ export default function OrderSummaryFooter({
   isOpen,
   isEnvio,
 }) {
+  const { estaAplicado } = useEnvioGratis(total);
+
   return (
     <footer className="fixed inset-x-0 bottom-0 z-30">
       <div className="mx-auto w-full max-w-[480px] border-t border-neutral-200/60 bg-white/95 backdrop-blur md:max-w-5xl">
@@ -80,7 +83,12 @@ export default function OrderSummaryFooter({
               Hay un producto inválido. Vaciá el carrito y agregalo nuevamente.
             </p>
           )}
-          {isEnvio && (
+          {isEnvio && estaAplicado && (
+            <p className="mb-2 rounded-md border border-green-300 bg-green-50 px-2 py-1.5 text-center text-xs font-semibold text-green-900">
+              ENVÍO GRATIS
+            </p>
+          )}
+          {isEnvio && !estaAplicado && (
             <p className="mb-2 rounded-md border border-amber-300 bg-amber-50 px-2 py-1.5 text-center text-xs font-semibold text-amber-900">
               El envio se cobra aparte y no esta incluido en este total.
             </p>

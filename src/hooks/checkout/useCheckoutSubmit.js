@@ -11,6 +11,7 @@ import {
   resolveCreatedOrderMeta,
 } from "@/utils/checkout/checkoutPayload";
 import { isStoreHoursValidationEnabled } from "@/config/storeHoursConfig";
+import { guardarDatos } from "@/hooks/checkout/useCheckoutPersistence";
 
 export function useCheckoutSubmit({
   items,
@@ -24,8 +25,8 @@ export function useCheckoutSubmit({
   montoEfectivoInputRef,
   setFieldErrors,
   setIsSubmitting,
-  setPedidoCreado,
   clearCart,
+  router,
   formValues,
 }) {
   return useCallback(async () => {
@@ -86,9 +87,20 @@ export function useCheckoutSubmit({
 
       const { payload } = buildCheckoutPayload({ normalized, items, couponCode });
       const data = await crearPedidoPublico(payload);
-      const { pedidoId, estado } = resolveCreatedOrderMeta(data);
-      setPedidoCreado({ id: pedidoId, estado });
+      const { pedidoId } = resolveCreatedOrderMeta(data);
+      guardarDatos({
+        nombre: formValues.nombre,
+        telefono: formValues.telefono,
+        email: formValues.email,
+        calle: formValues.calle,
+        numeroAltura: formValues.numeroAltura,
+        entreCalles: formValues.entreCalles,
+        edificioCasa: formValues.edificioCasa,
+        pisoDepto: formValues.pisoDepto,
+      });
       clearCart();
+      router.push(`/checkout/confirmado?pedido_id=${encodeURIComponent(pedidoId)}`);
+      return;
     } catch (err) {
       const backendMessage =
         err?.message ??
@@ -130,7 +142,7 @@ export function useCheckoutSubmit({
     couponCode,
     setIsSubmitting,
     clearCart,
-    setPedidoCreado,
+    router,
     metodoPago,
     montoEfectivoInputRef,
   ]);

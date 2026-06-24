@@ -1,5 +1,8 @@
 "use client";
 
+import { formatPrice } from "@/utils/format/price";
+import { useEnvioGratis } from "@/hooks/useEnvioGratis";
+
 export default function DeliverySection({
   tipoEntrega,
   TIPOS_ENTREGA,
@@ -19,7 +22,9 @@ export default function DeliverySection({
   setObsEntrega,
   fieldErrors,
   clearFieldError,
+  total = 0,
 }) {
+  const { estaAplicado, montoMinimo } = useEnvioGratis(total);
   return (
     <section className="space-y-3">
       <h2 className="-mx-4 w-[calc(100%+2rem)] rounded-none border border-neutral-200 bg-[#f8f8f8] px-3 py-1.5 text-center text-sm font-semibold text-slate-800">
@@ -56,12 +61,23 @@ export default function DeliverySection({
 
       {tipoEntrega === TIPOS_ENTREGA.envio && (
         <div className="space-y-3">
-          <div className="rounded-lg border-2 border-amber-300 bg-amber-50 px-3 py-2">
-            <p className="text-sm font-semibold text-amber-900">
-              Importante: el costo de envio se cobra aparte y no esta incluido en el total del
-              pedido.
-            </p>
-          </div>
+          {estaAplicado ? (
+            <div className="rounded-lg border-2 border-green-300 bg-green-50 px-3 py-2">
+              <p className="text-sm font-semibold text-green-900">
+                ¡Tu pedido supera los {formatPrice(montoMinimo)} — el envío es gratis!
+              </p>
+              <p className="mt-1 text-xs text-green-800">
+                El repartidor no te cobrará el envío al entregar el pedido.
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-lg border-2 border-amber-300 bg-amber-50 px-3 py-2">
+              <p className="text-sm font-semibold text-amber-900">
+                Importante: el costo de envio se cobra aparte y no esta incluido en el total del
+                pedido.
+              </p>
+            </div>
+          )}
 
           <label className="block">
             <span className="mb-1 block text-sm" style={{ color: "var(--text-primary)", fontWeight: 700 }}>

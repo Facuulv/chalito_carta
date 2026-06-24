@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { obtenerWhatsAppClientePedido } from "@/services/checkoutWhatsAppService";
 import {
@@ -8,10 +8,13 @@ import {
   shouldAutoOpenWhatsApp,
 } from "@/utils/checkout/whatsappAutoOpenGuard";
 
+const AUTO_OPEN_DELAY_MS = 1200;
+
 export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   const [waData, setWaData] = useState(null);
   const [loading, setLoading] = useState(true);
   const autoOpenAttemptedRef = useRef(false);
+  const autoOpenTimerRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,22 +57,17 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
     autoOpenAttemptedRef.current = true;
     markWhatsAppAutoOpened(pedidoId);
 
-    try {
-      window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
-    } catch (_) {
-      // El botón sigue disponible como fallback.
-    }
+    autoOpenTimerRef.current = window.setTimeout(() => {
+      window.location.href = waData.urlWaMe;
+    }, AUTO_OPEN_DELAY_MS);
+
+    return () => {
+      if (autoOpenTimerRef.current) {
+        window.clearTimeout(autoOpenTimerRef.current);
+        autoOpenTimerRef.current = null;
+      }
+    };
   }, [autoOpen, waData, pedidoId]);
-
-  const handleClick = useCallback(() => {
-    if (!waData?.urlWaMe) return;
-
-    try {
-      window.open(waData.urlWaMe, "_blank", "noopener,noreferrer");
-    } catch (_) {
-      // No romper la pantalla si el navegador bloquea la apertura.
-    }
-  }, [waData]);
 
   if (loading || !waData?.activo || !waData?.urlWaMe) {
     return null;
@@ -78,17 +76,19 @@ export default function WhatsAppPedidoButton({ pedidoId, autoOpen = true }) {
   return (
     <div className="mt-4 space-y-2">
       <p className="text-sm text-green-700">
-        Podés enviar el resumen de tu pedido al local por WhatsApp.
+        {autoOpen
+          ? "Abrimos WhatsApp con tu pedido listo para enviar. Si no se abrió, tocá el botón de abajo."
+          : "Podés enviar el resumen de tu pedido al local por WhatsApp."}
       </p>
 
-      <button
-        type="button"
-        onClick={handleClick}
+      <a
+        href={waData.urlWaMe}
+        rel="noopener noreferrer"
         className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm font-semibold text-white transition hover:bg-[#1ebe57]"
       >
         <FaWhatsapp className="text-lg" aria-hidden />
         Enviar pedido por WhatsApp
-      </button>
+      </a>
     </div>
   );
 }
