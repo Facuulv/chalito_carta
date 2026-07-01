@@ -25,7 +25,6 @@ export function useCheckoutSubmit({
   montoEfectivoInputRef,
   setFieldErrors,
   setIsSubmitting,
-  clearCart,
   router,
   formValues,
 }) {
@@ -98,7 +97,6 @@ export function useCheckoutSubmit({
         edificioCasa: formValues.edificioCasa,
         pisoDepto: formValues.pisoDepto,
       });
-      clearCart();
       router.push(`/checkout/confirmado?pedido_id=${encodeURIComponent(pedidoId)}`);
       return;
     } catch (err) {
@@ -141,7 +139,6 @@ export function useCheckoutSubmit({
     checkoutTotal,
     couponCode,
     setIsSubmitting,
-    clearCart,
     router,
     metodoPago,
     montoEfectivoInputRef,

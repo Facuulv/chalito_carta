@@ -35,7 +35,6 @@ export default function CheckoutFinalizarPage() {
   const router = useRouter();
   const items = useCarritoStore(selectCartItems);
   const total = useCarritoStore(selectCartTotal);
-  const clearCart = useCarritoStore((s) => s.clearCart);
   const { isOpen } = useStoreStatus();
 
   const [nombre, setNombre] = useState("");
@@ -101,12 +100,14 @@ export default function CheckoutFinalizarPage() {
     });
   };
 
-  // Toast si carrito vacío al entrar a finalizar (no al limpiar tras éxito)
+  // Toast solo si el usuario entra a finalizar con el carrito ya vacío (no tras enviar pedido)
   useEffect(() => {
     if (items.length === 0) {
       toast.error("Tu carrito está vacío.");
     }
-  }, [items.length]);
+    // Solo al montar la página; no reaccionar cuando el carrito se vacía por otra causa
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Migración: limpiar keys legacy una vez inicializado el estado
   useEffect(() => {
@@ -149,7 +150,6 @@ export default function CheckoutFinalizarPage() {
     montoEfectivoInputRef,
     setFieldErrors,
     setIsSubmitting,
-    clearCart,
     router,
     formValues: {
       nombre,
