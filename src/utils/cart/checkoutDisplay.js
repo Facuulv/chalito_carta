@@ -14,6 +14,15 @@ export function isHamburguesas(categoriaNombre) {
   return (categoriaNombre ?? "").toLowerCase().includes("hamburguesa");
 }
 
+export function isProductoConPresentacion(categoriaNombre) {
+  const n = (categoriaNombre ?? "").toLowerCase();
+  return (
+    n.includes("hamburguesa") ||
+    n.includes("sandwich") ||
+    n.includes("sándwich")
+  );
+}
+
 export const CANTIDAD_EXTRA_MAX = 99;
 
 export function getExtraCantidad(extra) {
@@ -56,13 +65,16 @@ export function getExtrasFingerprint(item) {
     .join("|");
 }
 
-export function splitExtrasForHamburguesa(extras) {
+export function splitExtrasForHamburguesa(extras, { inferSimple = false } = {}) {
   const presentacion = [];
   const otros = [];
   for (const e of extras) {
     const label = getPresentacionLabel(e?.nombre);
     if (label) presentacion.push(label);
     else otros.push(e);
+  }
+  if (inferSimple && presentacion.length === 0) {
+    presentacion.push("SIMPLE");
   }
   return { presentacion, otros };
 }

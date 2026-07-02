@@ -6,7 +6,7 @@ import { buildImageUrl } from "@/lib/imageUtils";
 import { formatPrice } from "@/utils/format/price";
 import { getItemName, getItemQuantity } from "@/utils/cart/cartItem";
 import {
-  isHamburguesas,
+  isProductoConPresentacion,
   splitExtrasForHamburguesa,
   formatExtraNombre,
 } from "@/utils/cart/checkoutDisplay";
@@ -24,9 +24,9 @@ export default function CheckoutItemCard({
     (e) => typeof e === "object" && e != null && "nombre" in e
   );
   const observaciones = (item.observaciones ?? "").trim();
-  const isHamb = isHamburguesas(item.categoria_nombre);
-  const { presentacion, otros } = isHamb
-    ? splitExtrasForHamburguesa(rawExtras)
+  const isConPresentacion = isProductoConPresentacion(item.categoria_nombre);
+  const { presentacion, otros } = isConPresentacion
+    ? splitExtrasForHamburguesa(rawExtras, { inferSimple: true })
     : { presentacion: [], otros: rawExtras };
   const hasPresentacion = presentacion.length > 0;
   const hasExtras = otros.length > 0;
