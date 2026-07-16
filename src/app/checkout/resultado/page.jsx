@@ -113,7 +113,7 @@ function buildStatusContent(displayContext) {
       return {
         title: "Confirmando tu pago",
         message:
-          "Estamos verificando el pago con Mercado Pago. Esta pantalla se actualizará sola en unos segundos.",
+          "Estamos verificando el pago con Mercado Pago. Esta pantalla se actualizará sola en unos segundos. Cuando el pago quede acreditado te mostraremos WhatsApp para enviar el resumen al local.",
       };
     case DISPLAY_CONTEXT.abandoned:
       return {

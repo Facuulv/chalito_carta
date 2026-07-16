@@ -57,7 +57,7 @@ function CheckoutConfirmadoContent() {
             <p className="text-lg font-bold text-green-800">Pedido enviado</p>
             <p className="mt-1 text-sm text-green-700">Número #{pedidoId}</p>
             <p className="mt-2 text-sm text-green-700">
-              En unos segundos te llevamos a WhatsApp para que envíes el resumen al local.
+              Tu pedido ya quedó registrado. Si WhatsApp está disponible, vas a poder enviar el resumen al local.
             </p>
             <WhatsAppPedidoButton pedidoId={pedidoId} autoOpen />
           </section>
