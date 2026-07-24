@@ -119,23 +119,20 @@ export default function ProductoDetallePage() {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
-    const nombresPresentacion = ["hacela doble", "hacela triple", "hacela cuadruple"];
+    const esDoble = (n) => n === "doble" || n === "hacela doble";
+    const esTriple = (n) => n === "triple" || n === "hacela triple";
+    const esCuadruple = (n) => n === "cuadruple" || n === "hacela cuadruple";
+    const esPresentacion = (n) => esDoble(n) || esTriple(n) || esCuadruple(n);
     const pres = [];
     const ext = [];
     for (const a of todosAdicionales) {
       const nombreNorm = normalizeExtraName(a.nombre);
-      if (nombresPresentacion.includes(nombreNorm)) pres.push(a);
+      if (esPresentacion(nombreNorm)) pres.push(a);
       else ext.push(a);
     }
-    const doble = pres.find(
-      (a) => normalizeExtraName(a.nombre) === "hacela doble"
-    );
-    const triple = pres.find(
-      (a) => normalizeExtraName(a.nombre) === "hacela triple"
-    );
-    const cuadruple = pres.find(
-      (a) => normalizeExtraName(a.nombre) === "hacela cuadruple"
-    );
+    const doble = pres.find((a) => esDoble(normalizeExtraName(a.nombre)));
+    const triple = pres.find((a) => esTriple(normalizeExtraName(a.nombre)));
+    const cuadruple = pres.find((a) => esCuadruple(normalizeExtraName(a.nombre)));
     return {
       presentacion: { doble, triple, cuadruple },
       extras: ext,

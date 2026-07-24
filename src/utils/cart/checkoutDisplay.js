@@ -4,9 +4,9 @@ export function getPresentacionLabel(nombre) {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
-  if (n === "hacela doble") return "DOBLE";
-  if (n === "hacela triple") return "TRIPLE";
-  if (n === "hacela cuadruple") return "CUÁDRUPLE";
+  if (n === "doble" || n === "hacela doble") return "DOBLE";
+  if (n === "triple" || n === "hacela triple") return "TRIPLE";
+  if (n === "cuadruple" || n === "hacela cuadruple") return "CUÁDRUPLE";
   return null;
 }
 
@@ -19,7 +19,8 @@ export function isProductoConPresentacion(categoriaNombre) {
   return (
     n.includes("hamburguesa") ||
     n.includes("sandwich") ||
-    n.includes("sándwich")
+    n.includes("sándwich") ||
+    n.includes("lomo")
   );
 }
 
