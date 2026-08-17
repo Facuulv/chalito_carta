@@ -14,7 +14,7 @@ export default function ProductObservaciones({ observaciones, setObservaciones }
         onChange={(event) => setObservaciones(event.target.value)}
         maxLength={150}
         rows={4}
-        placeholder="Ej: sin cebolla, bien cocido, etc."
+        placeholder="Ej: sin cebolla, etc."
         className="w-full resize-none rounded-md border border-neutral-200 bg-[#f5f5f5] p-3 text-sm text-slate-700 outline-none focus:border-neutral-400 focus:ring-[0.5px] focus:ring-neutral-400"
       />
     </section>
