@@ -23,6 +23,7 @@ export function mapCategory(raw) {
     nombre,
     slug: raw.slug ?? (toSlug(nombre) || String(id)),
     descripcion: raw.descripcion ?? null,
+    imagen_url: raw.imagen_url ?? null,
     orden: raw.orden ?? 0,
   };
 }

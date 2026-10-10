@@ -1,8 +1,7 @@
 /**
- * Mapeo categoría → imagen de producto para las cards del home.
- * Usa productos reales cuando hay; fallback a Unsplash si no.
+ * Imagen de las cards de categoría del home.
+ * Prioridad: imagen cargada en el admin → foto de un producto de la categoría → fallback fijo.
  */
-import { buildImageUrl } from "@/lib/imageUtils";
 
 /** Preferencia de producto por categoría (slug del producto a buscar) */
 const PREFERRED_PRODUCT_SLUG = {
@@ -23,13 +22,15 @@ const FALLBACKS = {
     "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=900&q=90",
 };
 
-/** Imágenes locales que tienen prioridad sobre la API */
+/** Imágenes locales con prioridad sobre las fotos de productos (no sobre la del admin) */
 const LOCAL_IMAGES = {
   empanadas: "/empanada-jamonyqueso.png",
 };
 
 export function getCategoryImageFromProducts(categoria, productos = []) {
   if (!categoria) return null;
+  if (categoria.imagen_url) return categoria.imagen_url;
+
   const catNombre = (categoria.nombre ?? "").trim().toLowerCase();
   const catId = categoria.id;
   const catSlug = (categoria.slug ?? catNombre).toLowerCase().replace(/\s+/g, "");
